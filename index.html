@@ -39,8 +39,19 @@
 
         /* ======= PDF 雙欄列印最佳化 ======= */
         @media print {
-            @page { size: A4 portrait; margin: 8mm; }
-            body { background-color: white !important; color: black !important; padding-bottom: 0 !important; font-size: 10pt !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            @page { 
+                size: A4 portrait; 
+                margin: 0; /* 設為 0 以擠掉瀏覽器預設的網址、頁碼、日期等頁首頁尾 */
+            }
+            body { 
+                background-color: white !important; 
+                color: black !important; 
+                padding: 10mm !important; /* 將實體邊距轉移到 body 內部，保護內容不被裁切 */
+                box-sizing: border-box;
+                font-size: 10pt !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
             .print-hide { display: none !important; }
             .print-2-col { column-count: 2; column-gap: 6mm; }
             details { display: inline-block; width: 100%; margin-bottom: 4px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
@@ -75,7 +86,6 @@
 
         <div class="print-2-col">
             
-            <!-- A. 基本資料 -->
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4" open>
                 <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>A. 基本資料</span>
@@ -148,7 +158,6 @@
                 </div>
             </details>
 
-            <!-- B. 面積試算 -->
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4" open>
                 <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>B. 面積試算</span>
@@ -309,7 +318,6 @@
                 </div>
             </details>
 
-            <!-- C. 車位及公設 -->
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4" open>
                 <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>C. 車位及公設</span>
@@ -398,7 +406,6 @@
                 </div>
             </details>
 
-            <!-- D. 坪效分析 -->
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4" open>
                 <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>D. 坪效分析</span>
@@ -443,7 +450,6 @@
                 </div>
             </details>
 
-            <!-- E. 投報評估 -->
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4" open>
                 <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>E. 投報評估</span>
@@ -590,7 +596,6 @@
         </div>
     </div>
 
-    <!-- LINE 瀏覽器專用警告視窗 -->
     <div id="line-warning" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 p-4 transition-opacity print-hide">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100">
             <div class="w-16 h-16 bg-[#cdb3a8]/20 text-[#463f3a] rounded-full flex items-center justify-center mx-auto mb-4">
@@ -613,7 +618,6 @@
         </div>
     </div>
 
-    <!-- 底部浮動列 (列印時自動隱藏) -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#463f3a] text-[#f4f3ee] p-3 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.1)] flex justify-between items-center z-50 border-t border-[#cdb3a8] print-hide">
         <div class="flex flex-col pl-1">
             <span class="text-xs text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
@@ -760,7 +764,7 @@
                 // 產生跳轉專用網址 (包含設定參數與原本的 Hash 數據)
                 const targetUrl = window.location.origin + window.location.pathname + '?' + urlParams.toString() + window.location.hash;
                 
-                // 模擬點擊來觸發跳轉 (比 location.href 更容易突破阻擋)
+                // 模擬點擊來觸發跳轉
                 const a = document.createElement('a');
                 a.href = targetUrl;
                 document.body.appendChild(a);
