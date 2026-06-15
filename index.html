@@ -679,6 +679,21 @@
         </div>
     </div>
 
+    <div id="line-warning" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 p-4 transition-opacity print-hide">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100">
+            <div class="w-16 h-16 bg-[#cdb3a8]/20 text-[#463f3a] rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h3 class="text-xl font-bold text-[#463f3a] mb-2">無法在 LINE 中匯出</h3>
+            <p class="text-[#89807b] text-sm mb-6 leading-relaxed">
+                LINE 內部瀏覽器不支援 PDF 匯出功能。<br>請點擊畫面右上角（或右下角）的 <strong class="text-[#463f3a] text-base">⋮</strong> 或是 <strong class="text-[#463f3a] text-base">↑</strong><br>選擇 <strong class="text-[#463f3a] border-b-2 border-[#cdb3a8]">「以預設瀏覽器開啟」</strong><br>（Safari 或 Chrome）即可正常匯出。
+            </p>
+            <button onclick="document.getElementById('line-warning').classList.add('hidden')" class="w-full bg-[#cdb3a8] text-[#463f3a] font-bold tracking-widest py-3.5 rounded-xl active:scale-95 transition-transform shadow-sm">
+                我知道了
+            </button>
+        </div>
+    </div>
+
     <div class="fixed bottom-0 left-0 right-0 bg-[#463f3a] text-[#f4f3ee] p-3 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.1)] flex justify-between items-center z-50 border-t border-[#cdb3a8] print-hide">
         <div class="flex flex-col pl-1">
             <span class="text-xs text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
@@ -739,6 +754,15 @@
         }
 
         function exportPDF() {
+            // 偵測是否為 LINE 內部瀏覽器
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (ua.indexOf("Line") > -1 || ua.indexOf("LINE") > -1) {
+                // 如果是 LINE，顯示自訂的引導警告視窗
+                document.getElementById('line-warning').classList.remove('hidden');
+                return; // 中斷執行，不呼叫列印
+            }
+
+            // 一般瀏覽器正常列印程序
             document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
             setTimeout(() => { window.print(); }, 400);
         }
