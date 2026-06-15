@@ -37,43 +37,49 @@
         .input-group button:first-child { border-right: none; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
         .input-group button:last-child { border-left: none; border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
 
-        /* ======= PDF 雙欄列印最佳化 ======= */
+        /* ======= PDF 雙欄列印最佳化 (壓縮版) ======= */
         @media print {
             @page { 
                 size: A4 portrait; 
-                margin: 0; /* 設為 0 以擠掉瀏覽器預設的網址、頁碼、日期等頁首頁尾 */
+                margin: 0 !important; /* 強制外邊距歸零，消滅網址與頁碼 */
             }
-            body { 
+            html, body { 
                 background-color: white !important; 
                 color: black !important; 
-                padding: 10mm !important; /* 將實體邊距轉移到 body 內部，保護內容不被裁切 */
+                margin: 0 !important;
+                padding: 6mm 8mm !important; /* 利用 padding 建立安全區域防裁切 */
                 box-sizing: border-box;
-                font-size: 10pt !important; 
+                font-size: 9pt !important; /* 縮小字體確保雙欄能塞進2頁 */
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
             }
             .print-hide { display: none !important; }
-            .print-2-col { column-count: 2; column-gap: 6mm; }
-            details { display: inline-block; width: 100%; margin-bottom: 4px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
-            details > summary { background-color: #cdb3a8 !important; border-bottom: 1px solid #ccc !important; padding: 4px 8px !important; }
+            .print-2-col { column-count: 2; column-gap: 5mm; }
+            details { display: inline-block; width: 100%; margin-bottom: 2px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; page-break-inside: avoid; }
+            details > summary { background-color: #cdb3a8 !important; border-bottom: 1px solid #ccc !important; padding: 3px 6px !important; }
             
-            .p-3\.5 { padding: 3px 6px !important; }
-            .p-4 { padding: 4px 6px !important; }
-            .mt-2 { margin-top: 2px !important; }
+            /* 極限壓縮內部留白 */
+            .p-3\.5 { padding: 2px 4px !important; }
+            .p-4 { padding: 3px 4px !important; }
+            .p-5 { padding: 4px !important; }
+            .mt-2 { margin-top: 1px !important; }
+            .mb-4 { margin-bottom: 4px !important; }
+            h1 { font-size: 14pt !important; margin-bottom: 2px !important; }
             
             .right-wrap { width: auto; max-width: 140px; justify-content: flex-end; }
-            .unit-abcd { width: 20px; font-size: 9pt !important; margin-left: 4px; }
-            .unit-e { width: 34px; font-size: 9pt !important; margin-left: 4px; }
-            .val-text { font-size: 10.5pt !important; }
+            .unit-abcd { width: 18px; font-size: 8pt !important; margin-left: 2px; }
+            .unit-e { width: 32px; font-size: 8pt !important; margin-left: 2px; }
+            .val-text { font-size: 9.5pt !important; }
             
             .input-group button { display: none !important; }
             .input-group { display: contents !important; }
             
+            /* 輸入框轉底線樣式縮小 */
             .input-group input, .plain-input.num-font { 
-                width: 45px !important; height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 2px !important; text-align: right !important; font-size: 10.5pt !important; border-radius: 0 !important; color: black !important;
+                width: 40px !important; height: 14px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 2px !important; text-align: right !important; font-size: 9.5pt !important; border-radius: 0 !important; color: black !important;
             }
             .plain-input:not(.num-font) { 
-                width: 70px !important; height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 !important; text-align: right !important; font-size: 10pt !important; border-radius: 0 !important; color: black !important;
+                width: 65px !important; height: 14px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 !important; text-align: right !important; font-size: 9pt !important; border-radius: 0 !important; color: black !important;
             }
         }
     </style>
