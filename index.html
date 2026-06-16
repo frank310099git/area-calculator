@@ -2,727 +2,712 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>台南市土地開發評估系統（適用電梯大樓）V4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>台南市土地開發評估系統（適用電梯大樓）V5 - iOS Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
+        /* iOS 預設字體 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000000; /* Apple 深色模式背景 */
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         /* 隱藏原生數字輸入框的上下小箭頭 */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        /* 美化手機點擊與鎖定縮放 */
-        button, input, select { touch-action: manipulation; }
-        .btn-tap:active { background-color: #cdb3a8; color: #f4f3ee; transform: scale(0.95); }
-        .focus-ring-custom:focus { outline: none; box-shadow: 0 0 0 2px #cdb3a8; border-color: #89807b; }
-        input, button, select, svg { transition: all 0.2s ease-in-out; }
-        summary::-webkit-details-marker { display: none; }
         
-        /* ======= 通用對齊排版系統 ======= */
+        button, input, select { touch-action: manipulation; outline: none; }
+        input, button, select, svg { transition: all 0.2s ease-in-out; }
+
+        /* ======= Apple Style UI 元件 ======= */
+        .ios-card {
+            background-color: #1c1c1e;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .ios-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 0.5px solid #38383a;
+        }
+        .ios-row:last-child { border-bottom: none; }
+
+        .ios-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+        .ios-label-sub {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8e8e93;
+        }
+
+        /* 右側數值與輸入框對齊系統 */
         .right-wrap {
             display: flex;
             align-items: center;
             justify-content: flex-end;
             flex: 1; 
         }
-        .unit-abcd { width: 28px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
-        .unit-e { width: 46px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
-        .val-text { font-family: monospace; font-weight: 700; color: #000000; font-size: 1rem; text-align: right; flex: 1; white-space: nowrap; }
-        
-        /* ======= 表單輸入框防跑位強化設定 ======= */
+
+        .unit {
+            width: 32px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            color: #8e8e93;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .val-text { 
+            font-family: -apple-system, monospace; 
+            font-weight: 600; 
+            font-size: 17px; 
+            text-align: right; 
+            flex: 1; 
+            white-space: nowrap; 
+        }
+
+        /* 輸入框樣式 */
         .plain-input { 
-            width: 100%; max-width: 130px; text-align: right; 
-            padding: 0 0.5rem;   
-            height: 38px;        
-            line-height: 38px;   
-            border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; font-size: 0.875rem; 
+            width: 100%; max-width: 120px; text-align: right; 
+            padding: 6px 12px;   
+            height: 36px;        
+            border-radius: 8px; font-size: 16px; 
             -webkit-appearance: none; appearance: none; 
-            box-sizing: border-box; 
-            vertical-align: middle;
-            margin: 0;
-            background-color: transparent;
+            background-color: #2c2c2e;
+            color: #ffffff;
+            border: none;
         }
-        .plain-input::placeholder { line-height: 38px; vertical-align: middle; }
         
-        /* 下拉選單專屬箭頭與對齊設定 */
         select.plain-input {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2389807b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238e8e93'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.25rem center;
-            background-size: 1rem;
-            padding-right: 1.5rem; /* 預留箭頭空間 */
-            text-align-last: right; /* 確保選取的文字靠右 */
-            cursor: pointer;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 32px; 
+            text-align-last: right; 
         }
-        
-        .plain-input.num-font { font-family: monospace; font-size: 1rem; font-weight: 600; background-color: #f4f3ee; }
-        
-        .input-group { display: flex; width: 100%; max-width: 130px; height: 38px; box-sizing: border-box; align-items: center; }
+
+        /* 加減按鈕群組 */
+        .input-group { 
+            display: flex; align-items: center; background-color: #2c2c2e; border-radius: 8px; height: 36px; padding: 2px;
+        }
         .input-group input { 
-            width: 100%; text-align: center; 
-            border-top: 1px solid rgba(137, 128, 123, 0.5); border-bottom: 1px solid rgba(137, 128, 123, 0.5); border-left: none; border-right: none; 
-            background-color: white; outline: none; font-family: monospace; font-size: 1rem; font-weight: 600; color: #000000; 
-            padding: 0; margin: 0; 
-            height: 38px;         
-            line-height: 38px;    
-            -webkit-appearance: none; appearance: none; border-radius: 0; box-sizing: border-box;
-            vertical-align: middle;
-        }
-        .input-group button { 
-            width: 2.75rem; background-color: #f4f3ee; border: 1px solid rgba(137, 128, 123, 0.5); color: #463f3a; 
-            font-size: 1.25rem; font-weight: 700; 
-            display: flex; justify-content: center; align-items: center; 
-            padding: 0; margin: 0; 
-            height: 38px;         
-            line-height: 38px;    
+            width: 60px; text-align: center; 
+            background-color: transparent; border: none;
+            font-family: -apple-system, monospace; font-size: 16px; font-weight: 600; color: #ffffff; 
             -webkit-appearance: none; appearance: none; box-sizing: border-box;
         }
-        .input-group button:first-child { border-right: none; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
-        .input-group button:last-child { border-left: none; border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
+        .input-group button { 
+            width: 32px; height: 32px; background-color: #3a3a3c; border-radius: 6px; color: #ffffff; 
+            font-size: 18px; font-weight: 500; display: flex; justify-content: center; align-items: center; border: none;
+        }
+        .input-group button:active { background-color: #505052; transform: scale(0.95); }
 
-        /* ======= 匯出圖片專用狀態 (瞬間隱藏 +- 按鈕並修補邊框) ======= */
+        /* 安全區域 padding (給有瀏海/底線的手機) */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+
+        /* ======= 匯出圖片專用狀態 ======= */
+        body.is-exporting { background-color: #000000; }
         body.is-exporting .input-group button { display: none !important; }
-        body.is-exporting .input-group input { 
-            border-left: 1px solid rgba(137, 128, 123, 0.5) !important; 
-            border-right: 1px solid rgba(137, 128, 123, 0.5) !important; 
-            border-radius: 0.25rem !important; 
-        }
-        /* 匯出時隱藏下拉選單箭頭，看起來像純文字 */
-        body.is-exporting select.plain-input {
-            background-image: none !important;
-            padding-right: 0.5rem !important;
-        }
+        body.is-exporting select.plain-input { background-image: none !important; padding-right: 12px !important; }
+        
+        /* 匯出時強制展開所有區塊 */
+        body.is-exporting .tab-content { display: block !important; opacity: 1 !important; }
+        body.is-exporting #bottom-tab-bar, 
+        body.is-exporting #floating-profit-bar { display: none !important; }
 
-        /* ======= PDF 雙欄列印最佳化 (電腦版原生列印使用) ======= */
         @media print {
             @page { size: A4 portrait; margin: 0; }
-            body { 
-                background-color: white !important; 
-                color: black !important; 
-                /* 縮小上下邊界至 2mm，左右維持 8mm */
-                padding: 2mm 8mm !important; 
-                box-sizing: border-box;
-                font-size: 10pt !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-            }
-            /* 消除主容器在列印時預設的上下內距 */
-            #capture-area {
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-            }
-            
+            body { background-color: white !important; color: black !important; padding: 2mm 8mm !important; }
             .print-hide { display: none !important; }
-            .print-2-col { column-count: 2; column-gap: 6mm; }
-            details { display: inline-block; width: 100%; margin-bottom: 4px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
-            details > summary { background-color: #cdb3a8 !important; border-bottom: 1px solid #ccc !important; padding: 4px 8px !important; }
-            
-            .p-3\.5 { padding: 3px 6px !important; }
-            .p-4 { padding: 4px 6px !important; }
-            .mt-2 { margin-top: 2px !important; }
-            
-            .right-wrap { width: auto; max-width: 140px; justify-content: flex-end; }
-            .unit-abcd { width: 20px; font-size: 9pt !important; margin-left: 4px; }
-            .unit-e { width: 34px; font-size: 9pt !important; margin-left: 4px; }
-            .val-text { font-size: 10.5pt !important; }
-            
+            .tab-content { display: block !important; margin-bottom: 20px !important; break-inside: avoid; }
+            .ios-card { background-color: white !important; border: 1px solid #ccc !important; box-shadow: none !important; border-radius: 8px !important; }
+            .ios-row { border-bottom: 1px solid #eee !important; padding: 8px !important; }
+            .ios-label { color: #000 !important; font-size: 12pt !important; }
+            .val-text { color: #000 !important; font-size: 12pt !important; }
+            .plain-input, .input-group input { background-color: transparent !important; color: #000 !important; border-bottom: 1px solid #999 !important; border-radius: 0 !important; }
             .input-group button { display: none !important; }
-            .input-group { display: contents !important; }
-            
-            /* 加入 line-height 強制垂直對齊，解決文字偏下問題 */
-            .input-group input, .plain-input.num-font { 
-                width: 45px !important; height: 16px !important; line-height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 2px !important; text-align: right !important; font-size: 10.5pt !important; border-radius: 0 !important; color: black !important;
-            }
-            .plain-input:not(.num-font) { 
-                width: 70px !important; height: 16px !important; line-height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 !important; text-align: right !important; font-size: 10pt !important; border-radius: 0 !important; color: black !important;
-            }
-            
-            /* 針對 select 的徹底防跑位設定 */
-            select.plain-input {
-                background-image: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-                text-align-last: right !important;
-            }
         }
     </style>
 </head>
-<body class="bg-[#f4f3ee] text-[#463f3a] font-sans pb-28 selection:bg-[#cdb3a8] selection:text-[#000000]">
+<body class="antialiased text-white selection:bg-[#0a84ff] selection:text-white">
 
-    <div id="capture-area" class="max-w-2xl mx-auto p-3 md:p-6 relative">
-        <h1 class="text-2xl font-bold text-center mb-1 text-[#463f3a] tracking-wider">土地開發評估系統</h1>
-        <h2 class="text-base font-medium text-center mb-6 text-[#89807b] tracking-widest print-hide">（適用電梯大樓）</h2>
+    <div id="capture-area" class="max-w-2xl mx-auto p-4 md:p-6 relative pb-48">
+        
+        <div class="mt-4 mb-8 pl-2">
+            <h1 class="text-3xl font-bold tracking-tight mb-1">評估系統</h1>
+            <h2 class="text-[#8e8e93] text-sm">適用電梯大樓專案</h2>
+        </div>
 
-        <div class="print-2-col">
+        <div id="tab-A" class="tab-content">
+            <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide">基本資料</h2>
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">案件名稱</div>
+                    <div class="right-wrap">
+                        <input type="text" id="a1" placeholder="手動填入" class="plain-input">
+                        <div class="unit"></div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">基地位置</div>
+                    <div class="right-wrap">
+                        <input type="text" id="a2" placeholder="手動填入" class="plain-input">
+                        <div class="unit"></div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">基地面積</div>
+                    <div class="right-wrap">
+                        <input type="number" id="a3" inputmode="decimal" value="1000" min="1" class="plain-input font-mono">
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">使用分區</div>
+                    <div class="right-wrap">
+                        <select id="a4" class="plain-input">
+                            <option value="住宅區" selected>住宅區</option>
+                            <option value="商業區">商業區</option>
+                            <option value="工業區">工業區</option>
+                            <option value="都外建築用地">都外建築用地</option>
+                            <option value="其他">其他</option>
+                        </select>
+                        <div class="unit"></div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">建蔽率</div>
+                    <div class="right-wrap">
+                        <input type="number" id="a5" inputmode="decimal" value="50" min="1" max="100" class="plain-input font-mono">
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">容積率</div>
+                    <div class="right-wrap">
+                        <input type="number" id="a6" inputmode="decimal" value="200" min="1" max="1000" class="plain-input font-mono">
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">都更+容移</div>
+                    <div class="right-wrap">
+                        <input type="number" id="a7" inputmode="decimal" value="0" min="0" max="90" class="plain-input font-mono">
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">容積獎勵</div>
+                    <div class="right-wrap">
+                        <input type="number" id="a8" inputmode="decimal" value="0" min="0" max="50" class="plain-input font-mono">
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+            </div>
             
-            <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 text-lg font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
-                    <span>A. 基本資料</span>
-                    <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </summary>
-                <div class="divide-y divide-[#89807b]/20">
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">案件名稱</div>
-                        <div class="right-wrap">
-                            <input type="text" id="a1" placeholder="手動填入" class="plain-input focus-ring-custom">
-                            <div class="unit-abcd"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">基地位置</div>
-                        <div class="right-wrap">
-                            <input type="text" id="a2" placeholder="手動填入" class="plain-input focus-ring-custom">
-                            <div class="unit-abcd"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">基地面積</div>
-                        <div class="right-wrap">
-                            <input type="number" id="a3" inputmode="decimal" value="1000" min="1" class="plain-input num-font focus-ring-custom">
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">使用分區</div>
-                        <div class="right-wrap">
-                            <select id="a4" class="plain-input focus-ring-custom">
-                                <option value="住宅區" selected>住宅區</option>
-                                <option value="商業區">商業區</option>
-                                <option value="工業區">工業區</option>
-                                <option value="都外建築用地">都外建築用地</option>
-                                <option value="其他">其他</option>
-                            </select>
-                            <div class="unit-abcd"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">建蔽率</div>
-                        <div class="right-wrap">
-                            <input type="number" id="a5" inputmode="decimal" value="50" min="1" max="100" class="plain-input num-font focus-ring-custom">
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">容積率</div>
-                        <div class="right-wrap">
-                            <input type="number" id="a6" inputmode="decimal" value="200" min="1" max="1000" class="plain-input num-font focus-ring-custom">
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">都更+容移</div>
-                        <div class="right-wrap">
-                            <input type="number" id="a7" inputmode="decimal" value="0" min="0" max="90" class="plain-input num-font focus-ring-custom">
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">容積獎勵</div>
-                        <div class="right-wrap">
-                            <input type="number" id="a8" inputmode="decimal" value="0" min="0" max="50" class="plain-input num-font focus-ring-custom">
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-bold">允建容積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-a9">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
+            <div class="ios-card bg-[#0a84ff]/10 border border-[#0a84ff]/30">
+                <div class="ios-row border-none">
+                    <div class="ios-label text-[#0a84ff] font-bold">允建容積</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#0a84ff]" id="out-a9">0.00</div>
+                        <div class="unit text-[#0a84ff]">m²</div>
                     </div>
                 </div>
-            </details>
+            </div>
+        </div>
 
-            <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 text-lg font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
-                    <span>B. 面積試算</span>
-                    <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </summary>
-                <div class="divide-y divide-[#89807b]/20">
-                    
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-b border-transparent">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">地上樓層數</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('b1', -1)">-</button>
-                                    <input type="number" id="b1" inputmode="decimal" value="10" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('b1', 1)">+</button>
-                                </div>
-                                <div class="unit-abcd">層</div>
-                            </div>
+        <div id="tab-B" class="tab-content hidden">
+            <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide">面積試算</h2>
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">地上樓層數</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('b1', -1)">-</button>
+                            <input type="number" id="b1" inputmode="decimal" value="10" min="1">
+                            <button onclick="adj('b1', 1)">+</button>
                         </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">標準層設計建蔽率</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-b1-prime">0</div>
-                                    <div class="unit-abcd">%</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">標準層戶數</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('b2', -1)">-</button>
-                                    <input type="number" id="b2" inputmode="decimal" value="4" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('b2', 1)">+</button>
-                                </div>
-                                <div class="unit-abcd">戶</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">總戶數</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-b2-prime">0</div>
-                                    <div class="unit-abcd">戶</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">各戶平均售坪</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-b2-dprime">0.00</div>
-                                    <div class="unit-abcd">坪</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-base">地下樓層數</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('b3', -1)">-</button>
-                                <input type="number" id="b3" inputmode="decimal" value="1" min="1" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('b3', 1)">+</button>
-                            </div>
-                            <div class="unit-abcd">層</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-base">梯廳比例</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('b4', -1)">-</button>
-                                <input type="number" id="b4" inputmode="decimal" value="8" min="5" max="10" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('b4', 1)">+</button>
-                            </div>
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="flex items-center space-x-2">
-                            <div class="text-[#463f3a] font-medium text-base">陽台比例</div>
-                            <button type="button" id="btn-balcony" class="text-xl leading-none w-6 h-6 flex items-center justify-center font-bold text-[#463f3a] active:scale-90 transition-transform print-hide" onclick="toggleBalcony()">☐</button>
-                        </div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b5">0.00</div>
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium mt-1">地上各層樓地板面積</div>
-                        <div class="flex flex-col items-end">
-                            <div class="right-wrap">
-                                <div class="val-text" id="out-b6">0.00</div>
-                                <div class="unit-abcd">m²</div>
-                            </div>
-                            <div id="warn-b6" class="text-[11px] text-white bg-red-600 px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 超出建蔽率</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">地上層樓地板合計</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b7">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">地上層+陽台合計</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b8">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-base">地下室開挖比例</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('b9', -1)">-</button>
-                                <input type="number" id="b9" inputmode="decimal" value="70" min="0" max="100" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('b9', 1)">+</button>
-                            </div>
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">地下室面積合計</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b10">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-base font-bold">總樓地板面積合計</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b11">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">總樓地板面積+陽台</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-b12">0.00</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
+                        <div class="unit">層</div>
                     </div>
                 </div>
-            </details>
-
-            <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 text-lg font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
-                    <span>C. 車位及公設</span>
-                    <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </summary>
-                <div class="divide-y divide-[#89807b]/20">
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-base">車位坪效預估</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('c1', -1)">-</button>
-                                <input type="number" id="c1" inputmode="decimal" value="45" min="13.75" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('c1', 1)">+</button>
-                            </div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">車位數量預估</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-c2">0</div>
-                            <div class="unit-abcd">輛</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-base">公設比設定</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('c3', -1)">-</button>
-                                <input type="number" id="c3" inputmode="decimal" value="33" min="1" max="99" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('c3', 1)">+</button>
-                            </div>
-                            <div class="unit-abcd">%</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">公設比反推銷售面積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-c4">0</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">地上層公設面積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-c5">0</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">地下層公設面積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-c6">0</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-base font-medium">公設總面積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-c7">0</div>
-                            <div class="unit-abcd">m²</div>
-                        </div>
-                    </div>
-                    
-                    <div class="p-3.5 bg-[#f4f3ee]/80 border-t border-[#89807b]/20">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#89807b] text-base font-medium">每車位持分面積</div>
-                            <div class="right-wrap">
-                                <div class="val-text" id="out-c8">0</div>
-                                <div class="unit-abcd">m²</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-start justify-between">
-                                <div class="text-[#89807b] text-base font-medium mt-1">每車位持分面積</div>
-                                <div class="flex flex-col items-end">
-                                    <div class="right-wrap">
-                                        <div class="val-text" id="out-c8-prime">0</div>
-                                        <div class="unit-abcd">坪</div>
-                                    </div>
-                                    <div id="warn-c8" class="text-[11px] text-white bg-[#463f3a] px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 面積過小</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">標準層設計建蔽率</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-b1-prime">0</div>
+                        <div class="unit">%</div>
                     </div>
                 </div>
-            </details>
-
-            <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 text-lg font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
-                    <span>D. 坪效分析</span>
-                    <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </summary>
-                <div class="divide-y divide-[#89807b]/20">
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">總樓地板面積(發包坪)</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-d1">0.00</div>
-                            <div class="unit-abcd">坪</div>
+                <div class="ios-row">
+                    <div class="ios-label">標準層戶數</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('b2', -1)">-</button>
+                            <input type="number" id="b2" inputmode="decimal" value="4" min="1">
+                            <button onclick="adj('b2', 1)">+</button>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">陽台面積</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-d2">0.00</div>
-                            <div class="unit-abcd">坪</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">停車位數量</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-d3">0</div>
-                            <div class="unit-abcd">輛</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">銷售面積(不含車位)</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-d4">0.00</div>
-                            <div class="unit-abcd">坪</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-base font-bold">售坪比(不含車位)</div>
-                        <div class="right-wrap">
-                            <div class="val-text" id="out-d5">0.00</div>
-                            <div class="unit-abcd"></div>
-                        </div>
+                        <div class="unit">戶</div>
                     </div>
                 </div>
-            </details>
-
-            <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 text-lg font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
-                    <span>E. 投報評估</span>
-                    <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </summary>
-                <div class="divide-y divide-[#89807b]/20">
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">土地成本</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('e1', -1)">-</button>
-                                    <input type="number" id="e1" inputmode="decimal" value="30" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('e1', 1)">+</button>
-                                </div>
-                                <div class="unit-e">萬/坪</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">總土地成本</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-e1-prime">0.00</div>
-                                    <div class="unit-e">萬元</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">營建成本</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('e2', -1)">-</button>
-                                    <input type="number" id="e2" inputmode="decimal" value="15" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('e2', 1)">+</button>
-                                </div>
-                                <div class="unit-e">萬/坪</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">總營建成本</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-e2-prime">0.00</div>
-                                    <div class="unit-e">萬元</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-base">管銷成本</div>
-                        <div class="right-wrap">
-                            <div class="input-group">
-                                <button class="btn-tap" onclick="adj('e3', -1)">-</button>
-                                <input type="number" id="e3" inputmode="decimal" value="15" min="1" class="focus-ring-custom">
-                                <button class="btn-tap" onclick="adj('e3', 1)">+</button>
-                            </div>
-                            <div class="unit-e">%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-y border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-base font-bold">總成本</div>
-                        <div class="right-wrap">
-                            <div class="val-text text-lg" id="out-e4">0.00</div>
-                            <div class="unit-e">萬元</div>
-                        </div>
-                    </div>
-
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">每坪售價</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('e5', -1)">-</button>
-                                    <input type="number" id="e5" inputmode="decimal" value="30" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('e5', 1)">+</button>
-                                </div>
-                                <div class="unit-e">萬/坪</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-2">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">每戶平均售價(不含車)</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-e5-prime">0.00</div>
-                                    <div class="unit-e">萬元</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">建物銷售總價</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-e5-dprime">0.00</div>
-                                    <div class="unit-e">萬元</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
-                        <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-base">車位單價</div>
-                            <div class="right-wrap">
-                                <div class="input-group">
-                                    <button class="btn-tap" onclick="adj('e6', -1)">-</button>
-                                    <input type="number" id="e6" inputmode="decimal" value="200" min="1" class="focus-ring-custom">
-                                    <button class="btn-tap" onclick="adj('e6', 1)">+</button>
-                                </div>
-                                <div class="unit-e">萬/輛</div>
-                            </div>
-                        </div>
-                        <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-base">車位銷售總價</div>
-                                <div class="right-wrap">
-                                    <div class="val-text" id="out-e6-prime">0.00</div>
-                                    <div class="unit-e">萬元</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-y border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-base font-bold">總銷金額</div>
-                        <div class="right-wrap">
-                            <div class="val-text text-lg" id="out-e7">0.00</div>
-                            <div class="unit-e">萬元</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-5 bg-[#463f3a] border-t-2 border-[#cdb3a8] rounded-b-xl">
-                        <div class="text-[#cdb3a8] text-lg font-bold">預估毛利</div>
-                        <div class="right-wrap">
-                            <div class="val-text text-[#f4f3ee] text-3xl" id="out-e8">0.00</div>
-                            <div class="unit-e text-[#cdb3a8] text-base">萬元</div>
-                        </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">總戶數</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-b2-prime">0</div>
+                        <div class="unit">戶</div>
                     </div>
                 </div>
-            </details>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">各戶平均售坪</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-b2-dprime">0.00</div>
+                        <div class="unit">坪</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">地下樓層數</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('b3', -1)">-</button>
+                            <input type="number" id="b3" inputmode="decimal" value="1" min="1">
+                            <button onclick="adj('b3', 1)">+</button>
+                        </div>
+                        <div class="unit">層</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">梯廳比例</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('b4', -1)">-</button>
+                            <input type="number" id="b4" inputmode="decimal" value="8" min="5" max="10">
+                            <button onclick="adj('b4', 1)">+</button>
+                        </div>
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="flex items-center space-x-2">
+                        <div class="ios-label">陽台比例</div>
+                        <button type="button" id="btn-balcony" class="text-xl w-6 h-6 flex items-center justify-center font-bold text-[#0a84ff] print-hide" onclick="toggleBalcony()">☑</button>
+                    </div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-b5">0.00</div>
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label-sub">地上各層樓地板面積</div>
+                    <div class="flex flex-col items-end">
+                        <div class="right-wrap">
+                            <div class="val-text" id="out-b6">0.00</div>
+                            <div class="unit">m²</div>
+                        </div>
+                        <div id="warn-b6" class="text-[10px] text-white bg-[#ff453a] px-1.5 py-0.5 rounded mt-1 hidden mr-10">⚠️ 超出建蔽率</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">地上層樓地板合計</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-b7">0.00</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">地上層+陽台合計</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-b8">0.00</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">地下室開挖比例</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('b9', -1)">-</button>
+                            <input type="number" id="b9" inputmode="decimal" value="70" min="0" max="100">
+                            <button onclick="adj('b9', 1)">+</button>
+                        </div>
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">地下室面積合計</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-b10">0.00</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card bg-[#30d158]/10 border border-[#30d158]/30">
+                <div class="ios-row">
+                    <div class="ios-label text-[#30d158] font-bold">總樓地板面積合計</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#30d158]" id="out-b11">0.00</div>
+                        <div class="unit text-[#30d158]">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row border-none">
+                    <div class="ios-label text-[#30d158] font-bold">總樓地板面積+陽台</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#30d158]" id="out-b12">0.00</div>
+                        <div class="unit text-[#30d158]">m²</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-C" class="tab-content hidden">
+            <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide">車位及公設</h2>
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">車位坪效預估</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('c1', -1)">-</button>
+                            <input type="number" id="c1" inputmode="decimal" value="45" min="13.75">
+                            <button onclick="adj('c1', 1)">+</button>
+                        </div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">車位數量預估</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-c2">0</div>
+                        <div class="unit">輛</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">公設比設定</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('c3', -1)">-</button>
+                            <input type="number" id="c3" inputmode="decimal" value="33" min="1" max="99">
+                            <button onclick="adj('c3', 1)">+</button>
+                        </div>
+                        <div class="unit">%</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">公設比反推銷售面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-c4">0</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">地上層公設面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-c5">0</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label-sub">地下層公設面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-c6">0</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/30">
+                    <div class="ios-label text-[#0a84ff]">公設總面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#0a84ff]" id="out-c7">0</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">每車位持分面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text" id="out-c8">0</div>
+                        <div class="unit">m²</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">換算坪數</div>
+                    <div class="flex flex-col items-end">
+                        <div class="right-wrap">
+                            <div class="val-text text-[#8e8e93]" id="out-c8-prime">0</div>
+                            <div class="unit">坪</div>
+                        </div>
+                        <div id="warn-c8" class="text-[10px] text-white bg-[#ff9f0a] px-1.5 py-0.5 rounded mt-1 hidden mr-10">⚠️ 面積過小</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-D" class="tab-content hidden">
+            <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide">坪效分析</h2>
+            <div class="ios-card bg-[#5e5ce6]/10 border border-[#5e5ce6]/30">
+                <div class="ios-row">
+                    <div class="ios-label text-[#5e5ce6] font-bold">總樓地板面積(發包坪)</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#5e5ce6]" id="out-d1">0.00</div>
+                        <div class="unit text-[#5e5ce6]">坪</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label text-[#5e5ce6] font-bold">陽台面積</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#5e5ce6]" id="out-d2">0.00</div>
+                        <div class="unit text-[#5e5ce6]">坪</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label text-[#5e5ce6] font-bold">停車位數量</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#5e5ce6]" id="out-d3">0</div>
+                        <div class="unit text-[#5e5ce6]">輛</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label text-[#5e5ce6] font-bold">銷售面積(不含車位)</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#5e5ce6]" id="out-d4">0.00</div>
+                        <div class="unit text-[#5e5ce6]">坪</div>
+                    </div>
+                </div>
+                <div class="ios-row border-none">
+                    <div class="ios-label text-[#5e5ce6] font-bold">售坪比(不含車位)</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#5e5ce6]" id="out-d5">0.00</div>
+                        <div class="unit text-[#5e5ce6]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-E" class="tab-content hidden">
+            <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide">投報評估</h2>
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">土地成本</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('e1', -1)">-</button>
+                            <input type="number" id="e1" inputmode="decimal" value="30" min="1">
+                            <button onclick="adj('e1', 1)">+</button>
+                        </div>
+                        <div class="unit w-12">萬/坪</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">總土地成本</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-e1-prime">0.00</div>
+                        <div class="unit w-12">萬元</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">營建成本</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('e2', -1)">-</button>
+                            <input type="number" id="e2" inputmode="decimal" value="15" min="1">
+                            <button onclick="adj('e2', 1)">+</button>
+                        </div>
+                        <div class="unit w-12">萬/坪</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">總營建成本</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-e2-prime">0.00</div>
+                        <div class="unit w-12">萬元</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">管銷成本</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('e3', -1)">-</button>
+                            <input type="number" id="e3" inputmode="decimal" value="15" min="1">
+                            <button onclick="adj('e3', 1)">+</button>
+                        </div>
+                        <div class="unit w-12">%</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#ff9f0a]/10">
+                    <div class="ios-label text-[#ff9f0a] font-bold">總成本</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#ff9f0a] text-xl" id="out-e4">0.00</div>
+                        <div class="unit w-12 text-[#ff9f0a]">萬元</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card">
+                <div class="ios-row">
+                    <div class="ios-label">每坪售價</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('e5', -1)">-</button>
+                            <input type="number" id="e5" inputmode="decimal" value="30" min="1">
+                            <button onclick="adj('e5', 1)">+</button>
+                        </div>
+                        <div class="unit w-12">萬/坪</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">每戶平均售價(不含車)</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-e5-prime">0.00</div>
+                        <div class="unit w-12">萬元</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">建物銷售總價</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-e5-dprime">0.00</div>
+                        <div class="unit w-12">萬元</div>
+                    </div>
+                </div>
+                <div class="ios-row">
+                    <div class="ios-label">車位單價</div>
+                    <div class="right-wrap">
+                        <div class="input-group">
+                            <button onclick="adj('e6', -1)">-</button>
+                            <input type="number" id="e6" inputmode="decimal" value="200" min="1">
+                            <button onclick="adj('e6', 1)">+</button>
+                        </div>
+                        <div class="unit w-12">萬/輛</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#2c2c2e]/50">
+                    <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">車位銷售總價</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#8e8e93]" id="out-e6-prime">0.00</div>
+                        <div class="unit w-12">萬元</div>
+                    </div>
+                </div>
+                <div class="ios-row bg-[#0a84ff]/10">
+                    <div class="ios-label text-[#0a84ff] font-bold">總銷金額</div>
+                    <div class="right-wrap">
+                        <div class="val-text text-[#0a84ff] text-xl" id="out-e7">0.00</div>
+                        <div class="unit w-12 text-[#0a84ff]">萬元</div>
+                    </div>
+                </div>
+            </div>
             
+            <div class="ios-card bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] border border-[#38383a] p-6 text-center">
+                <div class="text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
+                <div class="text-[#ffffff] text-4xl font-mono font-bold tracking-tight">
+                    <span id="out-e8">0.00</span>
+                    <span class="text-lg text-[#8e8e93] ml-1">萬元</span>
+                </div>
+            </div>
+        </div>
+    </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed bottom-[95px] left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
+        <div class="flex flex-col">
+            <span class="text-xs text-[#8e8e93] font-medium tracking-wide">即時毛利</span>
+            <div class="font-mono text-xl font-bold text-[#ffffff] flex items-baseline">
+                <span id="sticky-e8">0.00</span> 
+                <span class="text-xs ml-1 text-[#8e8e93]">萬</span>
+            </div>
+        </div>
+        <div class="flex space-x-2">
+            <button onclick="exportJPG()" class="bg-[#2c2c2e] text-white px-3 py-2 rounded-xl text-xs font-medium tracking-wide active:scale-95 transition-transform flex items-center">
+                JPG
+            </button>
+            <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#0a84ff] text-white px-3 py-2 rounded-xl text-xs font-bold tracking-wide shadow-lg active:scale-95 transition-transform flex items-center">
+                PDF
+            </button>
         </div>
     </div>
 
-    <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 p-4 transition-opacity print-hide">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100">
-            <div class="w-16 h-16 bg-[#cdb3a8]/20 text-[#463f3a] rounded-full flex items-center justify-center mx-auto mb-4">
+    <nav id="bottom-tab-bar" data-html2canvas-ignore="true" class="fixed bottom-0 left-0 w-full bg-[#121212]/85 backdrop-blur-2xl border-t border-[#38383a] flex justify-around items-center px-2 pt-3 pb-safe z-50 print-hide">
+        <button onclick="switchTab('tab-A', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#0a84ff]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
+            <span class="text-[10px] font-medium">基本資料</span>
+        </button>
+        <button onclick="switchTab('tab-B', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#8e8e93]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"></path></svg>
+            <span class="text-[10px] font-medium">面積試算</span>
+        </button>
+        <button onclick="switchTab('tab-C', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#8e8e93]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"></path></svg>
+            <span class="text-[10px] font-medium">車位公設</span>
+        </button>
+        <button onclick="switchTab('tab-D', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#8e8e93]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path><path d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path></svg>
+            <span class="text-[10px] font-medium">坪效分析</span>
+        </button>
+        <button onclick="switchTab('tab-E', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#8e8e93]">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-[10px] font-medium">投報評估</span>
+        </button>
+    </nav>
+
+    <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm transition-opacity print-hide">
+        <div class="bg-[#1c1c1e] rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100 border border-[#38383a]">
+            <div class="w-16 h-16 bg-[#2c2c2e] text-white rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-xl font-bold text-[#463f3a] mb-2">請使用外部瀏覽器匯出</h3>
-            <p class="text-[#89807b] text-sm mb-5 leading-relaxed">
-                目前所在的內建瀏覽器阻擋了下載功能。<br>請點擊下方按鈕複製網址（會保留您的輸入資料），<br>再手動貼上至 <strong class="text-[#463f3a] border-b border-[#cdb3a8]">Safari</strong> 或 <strong class="text-[#463f3a] border-b border-[#cdb3a8]">Chrome</strong> 即可。
+            <h3 class="text-xl font-bold text-white mb-2">請使用外部瀏覽器匯出</h3>
+            <p class="text-[#8e8e93] text-sm mb-5 leading-relaxed">
+                目前所在的內建瀏覽器阻擋了下載功能。<br>請點擊下方按鈕複製網址，<br>再手動貼上至 Safari 或 Chrome 即可。
             </p>
-            
             <div class="space-y-3">
-                <button onclick="copyToClipboard()" class="w-full bg-[#463f3a] text-white font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform shadow-sm flex justify-center items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                <button onclick="copyToClipboard()" class="w-full bg-[#0a84ff] text-white font-bold py-3 rounded-xl active:scale-95 transition-transform shadow-sm flex justify-center items-center">
                     <span id="copy-text">複製專屬網址 (含資料)</span>
                 </button>
-                <button onclick="document.getElementById('line-warning').classList.add('hidden')" class="w-full bg-[#f4f3ee] text-[#463f3a] font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform border border-[#cdb3a8]">
+                <button onclick="document.getElementById('line-warning').classList.add('hidden')" class="w-full bg-[#2c2c2e] text-white font-bold py-3 rounded-xl active:scale-95 transition-transform">
                     返回修改
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="bottom-bar" data-html2canvas-ignore="true" class="fixed bottom-0 left-0 right-0 bg-[#463f3a] text-[#f4f3ee] p-3 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.1)] flex justify-between items-center z-50 border-t border-[#cdb3a8] print-hide">
-        <div class="flex flex-col pl-1">
-            <span class="text-sm text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
-            <div class="font-mono text-xl font-bold text-white flex items-baseline">
-                <span id="sticky-e8">0.00</span> 
-                <span class="text-sm ml-1 text-[#cdb3a8]">萬</span>
-            </div>
-        </div>
-        <div class="flex space-x-2">
-            <button onclick="exportJPG()" class="bg-[#f4f3ee] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                JPG
-            </button>
-            <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                PDF
-            </button>
-        </div>
-    </div>
-
     <script>
         let useBalcony = true;
+        let activeTabId = 'tab-A'; // 紀錄當前頁籤
 
-        // 偵測裝置與瀏覽器環境
         const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const isInAppBrowser = /Line|MicroMessenger|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
+
+        // ================= 頁籤切換邏輯 (Tab Switch) =================
+        function switchTab(tabId, btnElement) {
+            // 隱藏所有頁籤內容
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // 重置所有按鈕顏色
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('text-[#0a84ff]');
+                el.classList.add('text-[#8e8e93]');
+            });
+            
+            // 顯示選擇的內容並高亮按鈕
+            document.getElementById(tabId).classList.remove('hidden');
+            if(btnElement) {
+                btnElement.classList.remove('text-[#8e8e93]');
+                btnElement.classList.add('text-[#0a84ff]');
+            }
+            
+            activeTabId = tabId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function loadStateFromURL() {
             if (!window.location.hash) return;
@@ -735,8 +720,8 @@
                     useBalcony = state.uB;
                     const btn = document.getElementById('btn-balcony');
                     if (btn) {
-                        btn.innerText = useBalcony ? '☐' : '☒';
-                        btn.style.color = useBalcony ? '#463f3a' : '#ef4444';
+                        btn.innerText = useBalcony ? '☑' : '☐';
+                        btn.style.color = useBalcony ? '#0a84ff' : '#8e8e93';
                     }
                 }
                 for (const id in state) {
@@ -753,29 +738,24 @@
             loadStateFromURL();
             calculate();
 
-            // 若為手機裝置，自動隱藏 PDF 匯出按鈕
             if (isMobileDevice) {
                 const pdfBtn = document.getElementById('btn-export-pdf');
                 if (pdfBtn) pdfBtn.style.display = 'none';
             }
 
-            // 處理自動跳轉後的自動匯出邏輯 (僅保留 JPG 判斷)
             const urlParams = new URLSearchParams(window.location.search);
             const autoAction = urlParams.get('autoAction');
             
             if (autoAction) {
                 if (isInAppBrowser) {
-                    // 如果仍然在 LINE 等軟體內，代表自動跳轉失敗，顯示警告視窗
                     document.getElementById('line-warning').classList.remove('hidden');
                 } else {
-                    // 已經成功在 Safari/Chrome 開啟，清除網址上的參數保持乾淨
                     urlParams.delete('autoAction');
                     urlParams.delete('openExternalBrowser');
                     const qs = urlParams.toString() ? '?' + urlParams.toString() : '';
                     const cleanUrl = window.location.origin + window.location.pathname + qs + window.location.hash;
                     window.history.replaceState(null, '', cleanUrl);
 
-                    // 延遲 800 毫秒確保字體與狀態完全載入後，自動執行匯出
                     if (autoAction === 'jpg') {
                         setTimeout(exportJPG, 800);
                     }
@@ -783,7 +763,6 @@
             }
         });
 
-        // 加入 select 以支援選單事件
         document.querySelectorAll('input, select').forEach(input => {
             if(input.tagName.toLowerCase() === 'input') {
                 input.addEventListener('focus', function() { this.select(); });
@@ -822,8 +801,8 @@
         function toggleBalcony() {
             useBalcony = !useBalcony;
             const btn = document.getElementById('btn-balcony');
-            btn.innerText = useBalcony ? '☐' : '☒';
-            btn.style.color = useBalcony ? '#463f3a' : '#ef4444';
+            btn.innerText = useBalcony ? '☑' : '☐';
+            btn.style.color = useBalcony ? '#0a84ff' : '#8e8e93';
             calculate();
         }
 
@@ -846,13 +825,11 @@
             });
         }
 
-        // ================= 跳轉邏輯 =================
         function triggerRedirect(action) {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set('openExternalBrowser', '1'); 
             urlParams.set('autoAction', action);       
             const targetUrl = window.location.origin + window.location.pathname + '?' + urlParams.toString() + window.location.hash;
-            
             window.location.href = targetUrl;
             
             setTimeout(() => {
@@ -860,42 +837,37 @@
             }, 1500);
         }
 
-        // ================= 匯出前準備 =================
+        // ================= 匯出前準備 (展開全部 Tab) =================
         function prepareForExport() {
-            // 展開所有區塊
-            document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
-            // 移除焦點避免游標入鏡
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
             }
+            // 透過 CSS body class 控制全部展開
+            document.body.classList.add('is-exporting');
         }
 
-        // ================= 核心截圖模組 =================
+        function restoreAfterExport() {
+            document.body.classList.remove('is-exporting');
+            // 將畫面拉回最上面，保持體驗流暢
+            window.scrollTo(0,0);
+        }
+
         function captureCanvas(callback) {
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
-            
-            // 加入匯出專用 class，隱藏按鈕並補回邊框
-            document.body.classList.add('is-exporting');
-
-            const originalBg = targetElement.style.backgroundColor;
-            targetElement.style.backgroundColor = 'white';
 
             setTimeout(() => {
                 html2canvas(targetElement, {
                     scale: 2, 
-                    backgroundColor: '#ffffff',
+                    backgroundColor: '#000000', // 暗黑模式底色
                     useCORS: true
                 }).then(canvas => {
-                    // 結束後移除 class，恢復原狀
-                    document.body.classList.remove('is-exporting');
-                    targetElement.style.backgroundColor = originalBg;
+                    restoreAfterExport();
                     callback(canvas);
                 });
-            }, 400); 
+            }, 500); // 延長一點等待時間讓全部頁籤展開渲染完成
         }
 
-        // ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
         function exportJPG() {
             if (isInAppBrowser) { triggerRedirect('jpg'); return; }
 
@@ -903,7 +875,6 @@
                 const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
                 canvas.toBlob(function(blob) {
                     const file = new File([blob], fileName, { type: 'image/jpeg' });
-                    // 檢查裝置是否支援原生的 Web Share API
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         navigator.share({
                             files: [file],
@@ -927,20 +898,19 @@
             link.click();
         }
 
-        // ================= 匯出 PDF 核心邏輯 (僅限電腦版原生列印) =================
         function exportPDF() {
-            // 防呆：如果手機端意外觸發，給予提示並中斷
             if (isMobileDevice) { 
                 alert("手機端已停用 PDF 匯出功能，請使用 JPG 匯出或改用電腦版操作。");
                 return; 
             }
-
-            // 電腦版直接依賴最原生、畫質最佳的 window.print()
             prepareForExport();
-            setTimeout(() => { window.print(); }, 400);
+            setTimeout(() => { 
+                window.print(); 
+                restoreAfterExport();
+            }, 500);
         }
 
-        // ================= 試算邏輯 =================
+        // ================= 試算邏輯 (完全保留您的原始公式) =================
         function calculate() {
             const a3 = parseFloat(document.getElementById('a3').value) || 0;
             const a5 = parseFloat(document.getElementById('a5').value) || 0;
@@ -989,7 +959,7 @@
             const valC7 = valC4 - (main_plus_balcony * 0.99);
             const valC6 = valC7 - valC5;
             const valC8 = (valB10 - valC6) / valC2; 
-            const valC8_prime = valC8 * 0.3025;      
+            const valC8_prime = valC8 * 0.3025;       
 
             const valD1 = valB11 * 0.3025; 
             const valD2 = (valB6 * pB5 * b1) * 0.3025; 
