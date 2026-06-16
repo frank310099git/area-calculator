@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         /* 隱藏原生數字輸入框的上下小箭頭 */
@@ -760,7 +760,21 @@
             });
         }
 
-        // ================= 匯出準備 =================
+        // ================= 跳轉邏輯 =================
+        function triggerRedirect(action) {
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('openExternalBrowser', '1'); 
+            urlParams.set('autoAction', action);       
+            const targetUrl = window.location.origin + window.location.pathname + '?' + urlParams.toString() + window.location.hash;
+            
+            window.location.href = targetUrl;
+            
+            setTimeout(() => {
+                document.getElementById('line-warning').classList.remove('hidden');
+            }, 1500);
+        }
+
+        // ================= 匯出前準備 =================
         function prepareForExport() {
             // 展開所有區塊
             document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
@@ -770,76 +784,63 @@
             }
         }
 
-        // ================= 跳轉邏輯 =================
-        function triggerRedirect(action) {
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('openExternalBrowser', '1'); // 針對某些 APP 強制外部開啟的黑魔法參數
-            urlParams.set('autoAction', action);       // 紀錄跳轉後要執行的動作
-            const targetUrl = window.location.origin + window.location.pathname + '?' + urlParams.toString() + window.location.hash;
-            
-            // 觸發跳轉
-            window.location.href = targetUrl;
-            
-            // 如果 1.5 秒後還留在原畫面，代表跳轉被阻擋，彈出複製網址視窗
-            setTimeout(() => {
-                document.getElementById('line-warning').classList.remove('hidden');
-            }, 1500);
-        }
-
-// ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
-        function exportJPG() {
-            if (isInAppBrowser) {
-                triggerRedirect('jpg');
-                return;
-            }
-
+        // ================= 核心截圖模組 (強制雙欄) =================
+        function captureCanvas(callback) {
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
+            const colContainer = targetElement.querySelector('.print-2-col');
             
-            // 檔名設定
-            const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
-            
+            // 關鍵：截圖瞬間，強制賦予雙欄屬性與白底，模擬列印狀態
+            if (colContainer) {
+                colContainer.style.columnCount = '2';
+                colContainer.style.columnGap = '6mm';
+            }
+            const originalBg = targetElement.style.backgroundColor;
+            targetElement.style.backgroundColor = 'white';
+
             setTimeout(() => {
                 html2canvas(targetElement, {
                     scale: 2, 
-                    windowWidth: isMobileDevice ? 800 : window.innerWidth,
-                    backgroundColor: '#f4f3ee', 
+                    windowWidth: 800, // 強制 800px 寬度，讓排版跟電腦版一模一樣
+                    backgroundColor: '#ffffff',
                     useCORS: true
                 }).then(canvas => {
-                    // 將 Canvas 轉換為 Blob 物件 (這才是分享 API 看得懂的格式)
-                    canvas.toBlob(function(blob) {
-                        const file = new File([blob], fileName, { type: 'image/jpeg' });
-
-                        // 檢查裝置是否支援原生的 Web Share API 並且允許分享檔案
-                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                            // 呼叫手機原生的分享/儲存面板
-                            navigator.share({
-                                files: [file],
-                                title: '土地開發評估系統',
-                                text: '這是我產出的土地開發評估試算表，請參考。'
-                            }).then(() => {
-                                console.log('分享/儲存成功');
-                            }).catch((error) => {
-                                // 如果使用者手動關閉面板，會觸發 AbortError，這是正常的
-                                if (error.name !== 'AbortError') {
-                                    console.error('分享失敗:', error);
-                                    fallbackDownload(canvas, fileName);
-                                }
-                            });
-                        } else {
-                            // 如果是電腦版瀏覽器，或是較舊不支援的手機，退回傳統的下載方式
-                            fallbackDownload(canvas, fileName);
-                        }
-                    }, 'image/jpeg', 0.9);
-
-                }).catch(err => {
-                    console.error("匯出圖片失敗：", err);
-                    alert("匯出圖片時發生錯誤，請稍後再試。");
+                    // 截圖完成，復原手機原本的單欄排版
+                    if (colContainer) {
+                        colContainer.style.columnCount = '';
+                        colContainer.style.columnGap = '';
+                    }
+                    targetElement.style.backgroundColor = originalBg;
+                    
+                    callback(canvas);
                 });
-            }, 300); 
+            }, 400); // 等待 DOM 渲染雙欄
         }
 
-        // 傳統的強制下載機制 (備用方案)
+        // ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
+        function exportJPG() {
+            if (isInAppBrowser) { triggerRedirect('jpg'); return; }
+
+            captureCanvas((canvas) => {
+                const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], fileName, { type: 'image/jpeg' });
+                    // 檢查裝置是否支援原生的 Web Share API
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: '土地開發評估系統',
+                            text: '這是我產出的土地開發評估試算表，請參考。'
+                        }).catch((error) => {
+                            if (error.name !== 'AbortError') fallbackDownload(canvas, fileName);
+                        });
+                    } else {
+                        fallbackDownload(canvas, fileName);
+                    }
+                }, 'image/jpeg', 0.9);
+            });
+        }
+
         function fallbackDownload(canvas, fileName) {
             const imgData = canvas.toDataURL('image/jpeg', 0.9);
             const link = document.createElement('a');
@@ -847,44 +848,44 @@
             link.href = imgData;
             link.click();
         }
-        // ================= 匯出 PDF 核心邏輯 =================
-        function exportPDF() {
-            if (isInAppBrowser) {
-                triggerRedirect('pdf');
-                return;
-            }
 
-            prepareForExport();
+        // ================= 匯出 PDF 核心邏輯 (強制塞進單一頁面) =================
+        function exportPDF() {
+            if (isInAppBrowser) { triggerRedirect('pdf'); return; }
 
             if (!isMobileDevice) {
-                // 電腦版：使用最乾淨原生的 window.print() 搭配 @media print
+                // 電腦版直接依賴最原生的列印
+                prepareForExport();
                 setTimeout(() => { window.print(); }, 400);
             } else {
-                // 手機版：使用 html2pdf.js 確保排版完美且無頁尾
-                const targetElement = document.getElementById('capture-area');
-                const opt = {
-                    margin:       [10, 0, 10, 0], 
-                    filename:     '開發評估系統_' + new Date().getTime() + '.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { 
-                        scale: 2, 
-                        windowWidth: 800, // 手機版強制模擬電腦寬度以顯示雙欄
-                        backgroundColor: '#f4f3ee',
-                        useCORS: true 
-                    },
-                    jsPDF:        { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait' 
-                    }
-                };
+                // 手機版：截圖後用 jsPDF 將長寬比例強制縮放進一張 A4
+                captureCanvas((canvas) => {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4'); // 直式 A4
 
-                setTimeout(() => {
-                    html2pdf().set(opt).from(targetElement).save().catch(err => {
-                        console.error("匯出PDF失敗：", err);
-                        alert("匯出 PDF 時發生錯誤，請稍後再試。");
-                    });
-                }, 400); 
+                    const pageWidth = 210; // A4 寬度 210mm
+                    const pageHeight = 297; // A4 高度 297mm
+                    const margin = 8; // 邊界 8mm
+
+                    const maxImgWidth = pageWidth - margin * 2;
+                    const maxImgHeight = pageHeight - margin * 2;
+
+                    let imgWidth = maxImgWidth;
+                    let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                    // 如果圖片高度超過一頁 A4，強制等比例縮小直到能塞進同一頁
+                    if (imgHeight > maxImgHeight) {
+                        imgHeight = maxImgHeight;
+                        imgWidth = (canvas.width * imgHeight) / canvas.height;
+                    }
+
+                    // 縮小後，計算左右置中
+                    const xOffset = margin + (maxImgWidth - imgWidth) / 2;
+
+                    pdf.addImage(imgData, 'JPEG', xOffset, margin, imgWidth, imgHeight);
+                    pdf.save('土地開發評估系統_' + new Date().getTime() + '.pdf');
+                });
             }
         }
 
