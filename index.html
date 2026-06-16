@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>台南市土地開發評估系統 V6.8 </title>
+    <title>台南市土地開發評估系統 V6.9 - 經典四色柔和版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -17,7 +17,7 @@
             display: none;
         }
 
-        /* iOS 預設字體與全黑背景 (網頁版) */
+        /* iOS 預設字體與全黑背景 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #000000; 
@@ -33,7 +33,7 @@
         button, input, select { touch-action: manipulation; outline: none; }
         input, button, select, svg { transition: all 0.2s ease-in-out; }
 
-        /* ======= Apple Style UI 卡片元件 (網頁版) ======= */
+        /* ======= Apple Style UI 卡片元件 ======= */
         .ios-card {
             background-color: #1c1c1e;
             border-radius: 20px;
@@ -135,7 +135,7 @@
         body.is-exporting .tab-content { display: block !important; opacity: 1 !important; }
         body.is-exporting #nav-bar, body.is-exporting #floating-profit-bar { display: none !important; }
 
-        /* ======= PDF 單頁列印極限壓縮 (Apple 極簡三色風) ======= */
+        /* ======= PDF 單頁列印極限壓縮 (4種經典配色) ======= */
         @media print {
             @page { size: A4 portrait; margin: 0; }
             
@@ -164,7 +164,6 @@
                 opacity: 1 !important; visibility: visible !important;
             }
             
-            /* 標題：Apple 系統淺灰底 */
             .tab-title { 
                 background-color: #F2F2F7 !important; color: #1D1D1F !important; 
                 padding: 3px 6px !important; font-size: 10.5pt !important; 
@@ -172,7 +171,7 @@
                 border-bottom: none !important; border-radius: 4px 4px 0 0 !important;
             }
 
-            /* 一般卡片與橫列：白底與極淺灰格線 */
+            /* 一般卡片與橫列 */
             .ios-card { 
                 background-color: #FFFFFF !important; border: 1px solid #E5E5EA !important; 
                 box-shadow: none !important; border-radius: 0 0 4px 4px !important; 
@@ -180,7 +179,6 @@
             }
             .ios-row { background-color: #FFFFFF !important; border-bottom: 1px solid #F2F2F7 !important; padding: 3px 4px !important; min-height: 18px !important; }
             
-            /* 強制覆蓋所有網頁版色彩，回歸太空灰黑 */
             .ios-card * { color: #1D1D1F !important; }
             .ios-label, .ios-label-sub { font-size: 9.5pt !important; }
             .val-text { font-size: 10pt !important; font-weight: bold !important; }
@@ -197,35 +195,39 @@
             .input-group { display: contents !important; }
             select.plain-input { background-image: none !important; padding-right: 0 !important; -webkit-appearance: none !important; appearance: none !important; }
 
-            /* ======= PDF 重點項目統一「黑底白字」 ======= */
-            .print-highlight { background-color: #1D1D1F !important; } 
-            .print-highlight.ios-row { border-bottom: 1px solid #38383A !important; }
-            
-            /* 強制重點項目內的字體全白 */
-            .print-highlight *, 
-            .print-highlight .ios-label, 
-            .print-highlight .ios-label-sub, 
-            .print-highlight .val-text, 
-            .print-highlight .unit { 
-                color: #FFFFFF !important; 
-            }
-            /* 針對帶有左側邊框的提示線 (如各戶平均售坪)，在黑底中改為白色線條 */
-            .print-highlight .border-l-2 {
-                border-color: #FFFFFF !important;
-            }
-            
-            /* 毛利大方塊也套用純粹的黑底白字 */
+            /* ======= PDF 4種經典順眼配色 (莫蘭迪色系) ======= */
+            /* 1. 經典藍 (基本資料/面積試算) */
+            .hl-blue { background-color: #F0F6FF !important; }
+            .hl-blue.ios-row { border-bottom: 1px solid #D6E4FF !important; }
+            .hl-blue *, .hl-blue .ios-label, .hl-blue .val-text, .hl-blue .unit { color: #0047AB !important; font-weight: bold !important; border-color: #0047AB !important; }
+
+            /* 2. 質感綠 (車位及公設) */
+            .hl-green { background-color: #F2FBF5 !important; }
+            .hl-green.ios-row { border-bottom: 1px solid #D3EFE0 !important; }
+            .hl-green *, .hl-green .ios-label, .hl-green .val-text, .hl-green .unit { color: #145A32 !important; font-weight: bold !important; border-color: #145A32 !important; }
+
+            /* 3. 溫暖橘 (坪效分析) */
+            .hl-orange { background-color: #FFF8F0 !important; }
+            .hl-orange.ios-row { border-bottom: 1px solid #FFE4C8 !important; }
+            .hl-orange *, .hl-orange .ios-label, .hl-orange .val-text, .hl-orange .unit { color: #D35400 !important; font-weight: bold !important; border-color: #D35400 !important; }
+
+            /* 4. 典雅紫紅 (投報評估) */
+            .hl-red { background-color: #FFF2F5 !important; }
+            .hl-red.ios-row { border-bottom: 1px solid #FFD6E0 !important; }
+            .hl-red *, .hl-red .ios-label, .hl-red .val-text, .hl-red .unit { color: #880E4F !important; font-weight: bold !important; border-color: #880E4F !important; }
+
+            /* 預估毛利大方塊 (深灰藍底 + 純白字，確保文字不被吃掉) */
             .print-profit-box {
-                background-color: #1D1D1F !important;
+                background-color: #1C2833 !important;
                 border: none !important; 
                 border-radius: 6px !important;
                 margin-top: 8px !important;
-                padding: 8px !important;
+                padding: 10px !important;
                 display: block !important;
             }
-            .print-profit-box .text-\[\#8e8e93\] { color: #D2D2D7 !important; font-size: 10pt !important; margin-bottom: 2px !important; }
-            .print-profit-box .text-\[\#ffffff\] { color: #FFFFFF !important; font-size: 24pt !important; font-weight: bold !important;}
-            .print-profit-box .text-lg { font-size: 12pt !important; color: #D2D2D7 !important; }
+            .print-profit-box .profit-title { color: #B0BEC5 !important; font-size: 10pt !important; margin-bottom: 2px !important; }
+            .print-profit-box .profit-val { color: #FFFFFF !important; font-size: 24pt !important; font-weight: bold !important; }
+            .print-profit-box .profit-unit { color: #FFFFFF !important; font-size: 12pt !important; margin-left: 4px !important; }
         }
     </style>
 </head>
@@ -257,7 +259,7 @@
 
     <div id="capture-area" class="max-w-2xl mx-auto p-4 md:p-6 relative">
         
-        <!-- 列印專屬/畫面共用標題 -->
+        <!-- 列印專屬標題 -->
         <div class="print-title-block mt-2 mb-6 pl-2 hidden md:block">
             <h1 class="text-3xl font-bold tracking-tight mb-1">台南市土地開發評估</h1>
             <h2 class="text-[#8e8e93] text-sm print-hide">適用電梯大樓專案</h2>
@@ -332,9 +334,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- 網頁版維持藍色高亮，列印版透過 CSS 轉為純黑白 -->
+                <!-- 重點高亮：經典藍 -->
                 <div class="ios-card border border-[#0a84ff]/30">
-                    <div class="ios-row border-none bg-[#0a84ff]/10 print-highlight">
+                    <div class="ios-row border-none bg-[#0a84ff]/10 hl-blue">
                         <div class="ios-label text-[#0a84ff] font-bold">允建容積</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#0a84ff]" id="out-a9">0.00</div>
@@ -384,12 +386,12 @@
                             <div class="unit">戶</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#ff9f0a]/10 print-highlight">
-                        <div class="ios-label-sub pl-4 border-l-2 border-[#ff9f0a] text-[#ff9f0a] font-bold">各戶平均售坪</div>
+                    <!-- 重點高亮：經典藍 -->
+                    <div class="ios-row bg-[#0a84ff]/10 hl-blue">
+                        <div class="ios-label-sub pl-4 border-l-2 border-[#0a84ff] text-[#0a84ff] font-bold">各戶平均售坪</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#ff9f0a]" id="out-b2-dprime">0.00</div>
-                            <div class="unit text-[#ff9f0a]">坪</div>
+                            <div class="val-text text-[#0a84ff]" id="out-b2-dprime">0.00</div>
+                            <div class="unit text-[#0a84ff]">坪</div>
                         </div>
                     </div>
                 </div>
@@ -475,20 +477,20 @@
                     </div>
                 </div>
 
-                <!-- 重點高亮：列印時轉為黑底白字 -->
-                <div class="ios-card border border-[#30d158]/30">
-                    <div class="ios-row bg-[#30d158]/10 print-highlight">
-                        <div class="ios-label text-[#30d158] font-bold">總樓地板面積合計</div>
+                <!-- 重點高亮：經典藍 -->
+                <div class="ios-card border border-[#0a84ff]/30">
+                    <div class="ios-row bg-[#0a84ff]/10 hl-blue">
+                        <div class="ios-label text-[#0a84ff] font-bold">總樓地板面積合計</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#30d158]" id="out-b11">0.00</div>
-                            <div class="unit text-[#30d158]">m²</div>
+                            <div class="val-text text-[#0a84ff]" id="out-b11">0.00</div>
+                            <div class="unit text-[#0a84ff]">m²</div>
                         </div>
                     </div>
-                    <div class="ios-row bg-[#30d158]/10 border-none print-highlight">
-                        <div class="ios-label text-[#30d158] font-bold">總樓地板面積+陽台</div>
+                    <div class="ios-row bg-[#0a84ff]/10 border-none hl-blue">
+                        <div class="ios-label text-[#0a84ff] font-bold">總樓地板面積+陽台</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#30d158]" id="out-b12">0.00</div>
-                            <div class="unit text-[#30d158]">m²</div>
+                            <div class="val-text text-[#0a84ff]" id="out-b12">0.00</div>
+                            <div class="unit text-[#0a84ff]">m²</div>
                         </div>
                     </div>
                 </div>
@@ -509,12 +511,12 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#bf5af2]/10 print-highlight">
-                        <div class="ios-label text-[#bf5af2] font-bold">車位數量預估</div>
+                    <!-- 重點高亮：質感綠 -->
+                    <div class="ios-row bg-[#30d158]/10 hl-green">
+                        <div class="ios-label text-[#30d158] font-bold">車位數量預估</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#bf5af2]" id="out-c2">0</div>
-                            <div class="unit text-[#bf5af2]">輛</div>
+                            <div class="val-text text-[#30d158]" id="out-c2">0</div>
+                            <div class="unit text-[#30d158]">輛</div>
                         </div>
                     </div>
                     <div class="ios-row">
@@ -528,12 +530,12 @@
                             <div class="unit">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#bf5af2]/10 print-highlight">
-                        <div class="ios-label text-[#bf5af2] font-bold">公設比反推銷售面積</div>
+                    <!-- 重點高亮：質感綠 -->
+                    <div class="ios-row bg-[#30d158]/10 hl-green">
+                        <div class="ios-label text-[#30d158] font-bold">公設比反推銷售面積</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#bf5af2]" id="out-c4">0</div>
-                            <div class="unit text-[#bf5af2]">m²</div>
+                            <div class="val-text text-[#30d158]" id="out-c4">0</div>
+                            <div class="unit text-[#30d158]">m²</div>
                         </div>
                     </div>
                     <div class="ios-row">
@@ -567,13 +569,13 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#bf5af2]/10 print-highlight border-none">
-                        <div class="ios-label-sub pl-4 border-l-2 border-[#bf5af2] text-[#bf5af2] font-bold">換算坪數</div>
+                    <!-- 重點高亮：質感綠 -->
+                    <div class="ios-row bg-[#30d158]/10 hl-green border-none">
+                        <div class="ios-label-sub pl-4 border-l-2 border-[#30d158] text-[#30d158] font-bold">換算坪數</div>
                         <div class="flex flex-col items-end">
                             <div class="right-wrap">
-                                <div class="val-text text-[#bf5af2]" id="out-c8-prime">0</div>
-                                <div class="unit text-[#bf5af2]">坪</div>
+                                <div class="val-text text-[#30d158]" id="out-c8-prime">0</div>
+                                <div class="unit text-[#30d158]">坪</div>
                             </div>
                             <div id="warn-c8" class="text-[10px] text-white bg-[#ff9f0a] px-1.5 py-0.5 rounded mt-1 hidden mr-10">⚠️ 面積過小</div>
                         </div>
@@ -584,41 +586,41 @@
             <!-- ================= 坪效分析 ================= -->
             <div id="tab-D" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">坪效分析</h2>
-                <div class="ios-card border border-[#32ade6]/30">
-                    <!-- 整區列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#32ade6]/10 print-highlight">
-                        <div class="ios-label text-[#32ade6] font-bold">總樓地板面積(發包坪)</div>
+                <div class="ios-card border border-[#ff9f0a]/30">
+                    <!-- 整區重點高亮：溫暖橘 -->
+                    <div class="ios-row bg-[#ff9f0a]/10 hl-orange">
+                        <div class="ios-label text-[#ff9f0a] font-bold">總樓地板面積(發包坪)</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#32ade6]" id="out-d1">0.00</div>
-                            <div class="unit text-[#32ade6]">坪</div>
+                            <div class="val-text text-[#ff9f0a]" id="out-d1">0.00</div>
+                            <div class="unit text-[#ff9f0a]">坪</div>
                         </div>
                     </div>
-                    <div class="ios-row bg-[#32ade6]/10 print-highlight">
-                        <div class="ios-label text-[#32ade6] font-bold">陽台面積</div>
+                    <div class="ios-row bg-[#ff9f0a]/10 hl-orange">
+                        <div class="ios-label text-[#ff9f0a] font-bold">陽台面積</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#32ade6]" id="out-d2">0.00</div>
-                            <div class="unit text-[#32ade6]">坪</div>
+                            <div class="val-text text-[#ff9f0a]" id="out-d2">0.00</div>
+                            <div class="unit text-[#ff9f0a]">坪</div>
                         </div>
                     </div>
-                    <div class="ios-row bg-[#32ade6]/10 print-highlight">
-                        <div class="ios-label text-[#32ade6] font-bold">停車位數量</div>
+                    <div class="ios-row bg-[#ff9f0a]/10 hl-orange">
+                        <div class="ios-label text-[#ff9f0a] font-bold">停車位數量</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#32ade6]" id="out-d3">0</div>
-                            <div class="unit text-[#32ade6]">輛</div>
+                            <div class="val-text text-[#ff9f0a]" id="out-d3">0</div>
+                            <div class="unit text-[#ff9f0a]">輛</div>
                         </div>
                     </div>
-                    <div class="ios-row bg-[#32ade6]/10 print-highlight">
-                        <div class="ios-label text-[#32ade6] font-bold">銷售面積(不含車位)</div>
+                    <div class="ios-row bg-[#ff9f0a]/10 hl-orange">
+                        <div class="ios-label text-[#ff9f0a] font-bold">銷售面積(不含車位)</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#32ade6]" id="out-d4">0.00</div>
-                            <div class="unit text-[#32ade6]">坪</div>
+                            <div class="val-text text-[#ff9f0a]" id="out-d4">0.00</div>
+                            <div class="unit text-[#ff9f0a]">坪</div>
                         </div>
                     </div>
-                    <div class="ios-row bg-[#32ade6]/10 border-none print-highlight">
-                        <div class="ios-label text-[#32ade6] font-bold">售坪比(不含車位)</div>
+                    <div class="ios-row bg-[#ff9f0a]/10 border-none hl-orange">
+                        <div class="ios-label text-[#ff9f0a] font-bold">售坪比(不含車位)</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#32ade6]" id="out-d5">0.00</div>
-                            <div class="unit text-[#32ade6]">倍</div>
+                            <div class="val-text text-[#ff9f0a]" id="out-d5">0.00</div>
+                            <div class="unit text-[#ff9f0a]">倍</div>
                         </div>
                     </div>
                 </div>
@@ -675,8 +677,8 @@
                             <div class="unit w-12">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#ff453a]/10 print-highlight">
+                    <!-- 重點高亮：典雅紫紅 -->
+                    <div class="ios-row bg-[#ff453a]/10 hl-red">
                         <div class="ios-label text-[#ff453a] font-bold">總成本</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#ff453a] text-xl" id="out-e4">0.00</div>
@@ -729,22 +731,22 @@
                             <div class="unit w-12">萬元</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：列印時轉為黑底白字 -->
-                    <div class="ios-row bg-[#0a84ff]/10 print-highlight border-none">
-                        <div class="ios-label text-[#0a84ff] font-bold">總銷金額</div>
+                    <!-- 重點高亮：典雅紫紅 -->
+                    <div class="ios-row bg-[#ff453a]/10 hl-red border-none">
+                        <div class="ios-label text-[#ff453a] font-bold">總銷金額</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#0a84ff] text-xl" id="out-e7">0.00</div>
-                            <div class="unit w-12 text-[#0a84ff]">萬元</div>
+                            <div class="val-text text-[#ff453a] text-xl" id="out-e7">0.00</div>
+                            <div class="unit w-12 text-[#ff453a]">萬元</div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- 大數字預估毛利區塊 -->
                 <div class="ios-card bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] border border-[#38383a] p-6 text-center print-profit-box">
-                    <div class="text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
-                    <div class="text-[#ffffff] text-4xl font-mono font-bold tracking-tight">
-                        <span id="out-e8">0.00</span>
-                        <span class="text-lg text-[#8e8e93] ml-1">萬元</span>
+                    <div class="profit-title text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
+                    <div class="flex justify-center items-baseline font-mono font-bold tracking-tight">
+                        <span id="out-e8" class="profit-val text-[#ffffff] text-4xl">0.00</span>
+                        <span class="profit-unit text-lg text-[#8e8e93] ml-1">萬元</span>
                     </div>
                 </div>
             </div> <!-- End Tab E -->
