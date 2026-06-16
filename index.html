@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>台南市土地開發評估系統（適用電梯大樓）V6.1 - 響應式 iOS Style</title>
+    <title>台南市土地開發評估系統（適用電梯大樓）V6.2 - 響應式 iOS Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
+        /* 隱藏各大瀏覽器的捲軸，防止畫面切換時跳動 */
+        html, body {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        ::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
         /* iOS 預設字體與全黑背景 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -45,14 +54,29 @@
         .ios-label-sub { font-size: 14px; font-weight: 400; color: #8e8e93; }
 
         .right-wrap { display: flex; align-items: center; justify-content: flex-end; flex: 1; }
-        .unit { width: 32px; text-align: left; font-size: 14px; font-weight: 500; color: #8e8e93; margin-left: 8px; flex-shrink: 0; }
-        .val-text { font-family: -apple-system, monospace; font-weight: 600; font-size: 17px; text-align: right; flex: 1; white-space: nowrap; }
+        
+        /* 單位統一設定：強制不換行、自動延伸寬度 */
+        .unit { 
+            width: auto; min-width: 28px; 
+            text-align: left; font-size: 14px; font-weight: 500; 
+            color: #8e8e93; margin-left: 8px; flex-shrink: 0; 
+            white-space: nowrap; 
+        }
+        
+        .val-text { 
+            font-family: -apple-system, monospace; 
+            font-weight: 600; font-size: 17px; 
+            text-align: right; flex: 1; white-space: nowrap; 
+            line-height: normal;
+        }
 
-        /* 輸入框與按鈕樣式 */
+        /* 輸入框與按鈕樣式 (使用 line-height 置中解決 JPG 文字下沉問題) */
         .plain-input { 
-            width: 100%; max-width: 120px; text-align: right; padding: 6px 12px; height: 36px;        
+            width: 100%; max-width: 120px; text-align: right; 
+            padding: 0 12px; height: 36px; line-height: 36px;        
             border-radius: 8px; font-size: 16px; -webkit-appearance: none; appearance: none; 
             background-color: #2c2c2e; color: #ffffff; border: none;
+            box-sizing: border-box;
         }
         select.plain-input {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238e8e93'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -60,11 +84,12 @@
             padding-right: 32px; text-align-last: right; 
         }
 
-        .input-group { display: flex; align-items: center; background-color: #2c2c2e; border-radius: 8px; height: 36px; padding: 2px; }
+        .input-group { display: flex; align-items: center; background-color: #2c2c2e; border-radius: 8px; height: 36px; padding: 2px; box-sizing: border-box;}
         .input-group input { 
             width: 50px; text-align: center; background-color: transparent; border: none;
             font-family: -apple-system, monospace; font-size: 16px; font-weight: 600; color: #ffffff; 
             -webkit-appearance: none; appearance: none; box-sizing: border-box;
+            height: 32px; line-height: 32px; padding: 0; margin: 0;
         }
         .input-group button { 
             width: 32px; height: 32px; background-color: #3a3a3c; border-radius: 6px; color: #ffffff; 
@@ -72,35 +97,26 @@
         }
         .input-group button:active { background-color: #505052; transform: scale(0.95); }
 
-        /* ======= 響應式排版 (電腦與手機區分) ======= */
+        /* ======= 響應式排版 ======= */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
 
         @media (min-width: 768px) {
-            /* 電腦版：導覽列在最上方，且與主要內容同寬 */
             #nav-bar {
                 top: 0; bottom: auto;
                 border-top: none; border-bottom: 1px solid #38383a;
                 padding-top: max(env(safe-area-inset-top), 8px);
                 padding-bottom: 8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100%;
-                max-width: 42rem; /* Tailwind 的 max-w-2xl 為 42rem，讓其與表格等寬 */
+                left: 50%; transform: translateX(-50%);
+                width: 100%; max-width: 42rem; 
             }
-            /* 電腦版：懸浮卡片置中且不擋內容 */
             #floating-profit-bar {
                 left: 50%; transform: translateX(-50%);
                 width: calc(100% - 2rem); max-width: 42rem;
                 bottom: 24px;
             }
-            /* 電腦版：主畫面預留上下空間，確保可滾動到底 */
-            #capture-area {
-                padding-top: 100px;
-                padding-bottom: 140px; 
-            }
+            #capture-area { padding-top: 100px; padding-bottom: 140px; }
         }
         @media (max-width: 767px) {
-            /* 手機版：導覽列在最下方，滿版 */
             #nav-bar {
                 bottom: 0; top: auto; left: 0;
                 border-top: 1px solid #38383a; border-bottom: none;
@@ -117,24 +133,21 @@
         body.is-exporting .tab-content { display: block !important; opacity: 1 !important; }
         body.is-exporting #nav-bar, body.is-exporting #floating-profit-bar { display: none !important; }
 
-        /* ======= PDF 雙欄列印最佳化 (A4 塞入一頁) ======= */
+        /* ======= PDF 雙欄列印最佳化 (A4) ======= */
         @media print {
             @page { size: A4 portrait; margin: 0; }
             body { background-color: white !important; color: black !important; padding: 2mm 8mm !important; font-size: 10pt !important; }
             .print-hide { display: none !important; }
             #capture-area { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
             
-            /* 啟用雙欄排版 */
             .print-2-col-wrapper { column-count: 2; column-gap: 6mm; display: block !important; }
             
-            /* 強制所有分頁顯示為區塊，避免被截斷 */
             .tab-content { 
                 display: inline-block !important; width: 100% !important; 
                 margin-bottom: 6px !important; break-inside: avoid; 
                 opacity: 1 !important; visibility: visible !important;
             }
             
-            /* 標題與卡片轉為列印高對比樣式 */
             .tab-title { 
                 background-color: #e5e5ea !important; color: #000 !important; 
                 padding: 4px 8px !important; font-size: 11pt !important; 
@@ -150,14 +163,22 @@
             
             .ios-label, .ios-label-sub { color: #000 !important; font-size: 10pt !important; }
             .val-text { color: #000 !important; font-size: 10.5pt !important; }
-            .unit { font-size: 9pt !important; color: #333 !important; width: 20px !important; margin-left: 4px !important; }
             
-            /* 針對輸入框拔除底色與按鈕 */
+            /* 優化 PDF 單位顯示，避免換行並向左挪動數字 */
+            .unit { 
+                font-size: 9pt !important; color: #333 !important; 
+                width: auto !important; min-width: 28px !important; 
+                margin-left: 4px !important; white-space: nowrap !important;
+            }
+            
+            /* 針對輸入框底線與置中微調 */
             .plain-input, .input-group input { 
                 background-color: transparent !important; color: #000 !important; 
                 border: none !important; border-bottom: 1px solid #999 !important; 
-                border-radius: 0 !important; height: 16px !important; line-height: 16px !important; 
-                padding: 0 2px !important; font-size: 10.5pt !important;
+                border-radius: 0 !important; 
+                height: 20px !important; line-height: 18px !important; /* 加高並置中避免文字貼底 */
+                padding: 0 2px 2px 2px !important; font-size: 10.5pt !important;
+                max-width: 80px !important; /* 限制數字寬度，給單位更多空間 */
             }
             .input-group button { display: none !important; }
             .input-group { display: contents !important; }
@@ -167,7 +188,6 @@
 </head>
 <body class="antialiased text-white selection:bg-[#0a84ff] selection:text-white">
 
-    <!-- ================= 頂部/底部導覽列 (Responsive Nav Bar) ================= -->
     <nav id="nav-bar" data-html2canvas-ignore="true" class="fixed bg-[#121212]/85 backdrop-blur-2xl flex justify-around items-center px-2 pb-safe z-50 print-hide">
         <button onclick="switchTab('tab-A', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#0a84ff] pt-2">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
@@ -193,15 +213,12 @@
 
     <div id="capture-area" class="max-w-2xl mx-auto p-4 md:p-6 relative">
         <div class="mt-2 mb-6 pl-2 print-hide">
-            <!-- 標題文字修改 -->
             <h1 class="text-3xl font-bold tracking-tight mb-1">台南市土地開發評估</h1>
             <h2 class="text-[#8e8e93] text-sm">適用電梯大樓專案</h2>
         </div>
 
-        <!-- 列印用雙欄容器 (網頁瀏覽時無作用) -->
         <div class="print-2-col-wrapper">
 
-            <!-- ================= A. 基本資料 ================= -->
             <div id="tab-A" class="tab-content">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">A. 基本資料</h2>
                 <div class="ios-card">
@@ -279,7 +296,6 @@
                 </div>
             </div>
 
-            <!-- ================= B. 面積試算 ================= -->
             <div id="tab-B" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">B. 面積試算</h2>
                 <div class="ios-card">
@@ -343,23 +359,20 @@
                     <div class="ios-row">
                         <div class="ios-label">梯廳比例</div>
                         <div class="right-wrap">
-                            <!-- 梯廳比例限制更新 -->
                             <div class="input-group">
                                 <button onclick="adj('b4', -1)">-</button>
-                                <input type="number" id="b4" inputmode="decimal" value="8" min="0" max="10">
+                                <input type="number" id="b4" inputmode="decimal" value="10" min="0" max="10">
                                 <button onclick="adj('b4', 1)">+</button>
                             </div>
                             <div class="unit">%</div>
                         </div>
                     </div>
                     <div class="ios-row">
-                        <!-- 陽台比例色彩還原白色 -->
-                        <div class="ios-label">陽台比例</div>
+                        <div class="ios-label text-white">陽台比例</div>
                         <div class="right-wrap">
-                            <!-- 陽台比例限制更新 -->
                             <div class="input-group">
                                 <button onclick="adj('b5', -1)">-</button>
-                                <input type="number" id="b5" inputmode="decimal" value="7" min="0" max="10">
+                                <input type="number" id="b5" inputmode="decimal" value="5" min="0" max="10">
                                 <button onclick="adj('b5', 1)">+</button>
                             </div>
                             <div class="unit">%</div>
@@ -430,7 +443,6 @@
                 </div>
             </div>
 
-            <!-- ================= C. 車位及公設 ================= -->
             <div id="tab-C" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">C. 車位及公設</h2>
                 <div class="ios-card">
@@ -514,7 +526,6 @@
                 </div>
             </div>
 
-            <!-- ================= D. 坪效分析 ================= -->
             <div id="tab-D" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">D. 坪效分析</h2>
                 <div class="ios-card bg-[#5e5ce6]/10 border border-[#5e5ce6]/30">
@@ -522,41 +533,40 @@
                         <div class="ios-label text-[#5e5ce6] font-bold">總樓地板面積(發包坪)</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#5e5ce6]" id="out-d1">0.00</div>
-                            <div class="unit text-[#5e5ce6]">坪</div>
+                            <div class="unit">坪</div>
                         </div>
                     </div>
                     <div class="ios-row">
                         <div class="ios-label text-[#5e5ce6] font-bold">陽台面積</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#5e5ce6]" id="out-d2">0.00</div>
-                            <div class="unit text-[#5e5ce6]">坪</div>
+                            <div class="unit">坪</div>
                         </div>
                     </div>
                     <div class="ios-row">
                         <div class="ios-label text-[#5e5ce6] font-bold">停車位數量</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#5e5ce6]" id="out-d3">0</div>
-                            <div class="unit text-[#5e5ce6]">輛</div>
+                            <div class="unit">輛</div>
                         </div>
                     </div>
                     <div class="ios-row">
                         <div class="ios-label text-[#5e5ce6] font-bold">銷售面積(不含車位)</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#5e5ce6]" id="out-d4">0.00</div>
-                            <div class="unit text-[#5e5ce6]">坪</div>
+                            <div class="unit">坪</div>
                         </div>
                     </div>
                     <div class="ios-row border-none">
                         <div class="ios-label text-[#5e5ce6] font-bold">售坪比(不含車位)</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#5e5ce6]" id="out-d5">0.00</div>
-                            <div class="unit text-[#5e5ce6]"></div>
+                            <div class="unit"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= E. 投報評估 ================= -->
             <div id="tab-E" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">E. 投報評估</h2>
                 <div class="ios-card">
@@ -568,14 +578,14 @@
                                 <input type="number" id="e1" inputmode="decimal" value="30" min="1">
                                 <button onclick="adj('e1', 1)">+</button>
                             </div>
-                            <div class="unit w-12">萬/坪</div>
+                            <div class="unit">萬/坪</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#2c2c2e]/50">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">總土地成本</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#8e8e93]" id="out-e1-prime">0.00</div>
-                            <div class="unit w-12">萬元</div>
+                            <div class="unit">萬元</div>
                         </div>
                     </div>
                     <div class="ios-row">
@@ -586,14 +596,14 @@
                                 <input type="number" id="e2" inputmode="decimal" value="15" min="1">
                                 <button onclick="adj('e2', 1)">+</button>
                             </div>
-                            <div class="unit w-12">萬/坪</div>
+                            <div class="unit">萬/坪</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#2c2c2e]/50">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">總營建成本</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#8e8e93]" id="out-e2-prime">0.00</div>
-                            <div class="unit w-12">萬元</div>
+                            <div class="unit">萬元</div>
                         </div>
                     </div>
                     <div class="ios-row">
@@ -604,14 +614,14 @@
                                 <input type="number" id="e3" inputmode="decimal" value="15" min="1">
                                 <button onclick="adj('e3', 1)">+</button>
                             </div>
-                            <div class="unit w-12">%</div>
+                            <div class="unit">%</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#ff9f0a]/10">
                         <div class="ios-label text-[#ff9f0a] font-bold">總成本</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#ff9f0a] text-xl" id="out-e4">0.00</div>
-                            <div class="unit w-12 text-[#ff9f0a]">萬元</div>
+                            <div class="unit text-[#ff9f0a]">萬元</div>
                         </div>
                     </div>
                 </div>
@@ -625,21 +635,21 @@
                                 <input type="number" id="e5" inputmode="decimal" value="30" min="1">
                                 <button onclick="adj('e5', 1)">+</button>
                             </div>
-                            <div class="unit w-12">萬/坪</div>
+                            <div class="unit">萬/坪</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#2c2c2e]/50">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">每戶平均售價(不含車)</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#8e8e93]" id="out-e5-prime">0.00</div>
-                            <div class="unit w-12">萬元</div>
+                            <div class="unit">萬元</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#2c2c2e]/50">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">建物銷售總價</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#8e8e93]" id="out-e5-dprime">0.00</div>
-                            <div class="unit w-12">萬元</div>
+                            <div class="unit">萬元</div>
                         </div>
                     </div>
                     <div class="ios-row">
@@ -650,26 +660,25 @@
                                 <input type="number" id="e6" inputmode="decimal" value="200" min="1">
                                 <button onclick="adj('e6', 1)">+</button>
                             </div>
-                            <div class="unit w-12">萬/輛</div>
+                            <div class="unit">萬/輛</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#2c2c2e]/50">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#8e8e93]">車位銷售總價</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#8e8e93]" id="out-e6-prime">0.00</div>
-                            <div class="unit w-12">萬元</div>
+                            <div class="unit">萬元</div>
                         </div>
                     </div>
                     <div class="ios-row bg-[#0a84ff]/10 border-none">
                         <div class="ios-label text-[#0a84ff] font-bold">總銷金額</div>
                         <div class="right-wrap">
                             <div class="val-text text-[#0a84ff] text-xl" id="out-e7">0.00</div>
-                            <div class="unit w-12 text-[#0a84ff]">萬元</div>
+                            <div class="unit text-[#0a84ff]">萬元</div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- 大數字預估毛利區塊 -->
                 <div class="ios-card bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] border border-[#38383a] p-6 text-center print-hide">
                     <div class="text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
                     <div class="text-[#ffffff] text-4xl font-mono font-bold tracking-tight">
@@ -677,13 +686,7 @@
                         <span class="text-lg text-[#8e8e93] ml-1">萬元</span>
                     </div>
                 </div>
-            </div> <!-- End Tab E -->
-
-        </div> <!-- End print-2-col-wrapper -->
-    </div> <!-- End capture-area -->
-
-    <!-- ================= 懸浮數據卡 (Floating Profit Bar) ================= -->
-    <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
+            </div> </div> </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
         <div class="flex flex-col">
             <span class="text-xs text-[#8e8e93] font-medium tracking-wide">即時毛利</span>
             <div class="font-mono text-xl font-bold text-[#ffffff] flex items-baseline">
@@ -701,7 +704,6 @@
         </div>
     </div>
 
-    <!-- LINE App 阻擋下載提示視窗 -->
     <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm transition-opacity print-hide">
         <div class="bg-[#1c1c1e] rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100 border border-[#38383a]">
             <div class="w-16 h-16 bg-[#2c2c2e] text-white rounded-full flex items-center justify-center mx-auto mb-4">
@@ -817,24 +819,17 @@
             let val = parseFloat(el.value) || 0;
             val += delta;
 
-            // 若更動梯廳或陽台比例，自動檢測聯動 15% 上限
-            if (id === 'b4') {
+            // 若更動梯廳或陽台比例，自動檢測聯動 15% 上限，並確保在 0~10 之間
+            if (id === 'b4' || id === 'b5') {
                 if (val > 10) val = 10;
                 if (val < 0) val = 0;
                 el.value = val;
                 
-                let b5Val = parseFloat(document.getElementById('b5').value) || 0;
-                if (val + b5Val > 15) {
-                    document.getElementById('b5').value = 15 - val;
-                }
-            } else if (id === 'b5') {
-                if (val > 10) val = 10;
-                if (val < 0) val = 0;
-                el.value = val;
-
-                let b4Val = parseFloat(document.getElementById('b4').value) || 0;
-                if (val + b4Val > 15) {
-                    document.getElementById('b4').value = 15 - val;
+                let otherId = id === 'b4' ? 'b5' : 'b4';
+                let otherVal = parseFloat(document.getElementById(otherId).value) || 0;
+                
+                if (val + otherVal > 15) {
+                    document.getElementById(otherId).value = 15 - val;
                 }
             } else {
                 const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
@@ -911,7 +906,7 @@
             if (isInAppBrowser) { triggerRedirect('jpg'); return; }
 
             captureCanvas((canvas) => {
-                const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
+                const fileName = '台南市土地開發評估系統_' + new Date().getTime() + '.jpg';
                 canvas.toBlob(function(blob) {
                     const file = new File([blob], fileName, { type: 'image/jpeg' });
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
