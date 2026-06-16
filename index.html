@@ -791,30 +791,18 @@
         function captureCanvas(callback) {
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
-            const colContainer = targetElement.querySelector('.print-2-col');
             
-            // 截圖瞬間，強制賦予雙欄屬性與白底，模擬列印狀態
-            if (colContainer) {
-                colContainer.style.columnCount = '2';
-                colContainer.style.columnGap = '6mm';
-            }
             const originalBg = targetElement.style.backgroundColor;
             targetElement.style.backgroundColor = 'white';
 
             setTimeout(() => {
                 html2canvas(targetElement, {
                     scale: 2, 
-                    windowWidth: 800, // 強制 800px 寬度，讓排版跟電腦版一模一樣
+                    // 移除強制 windowWidth，讓它忠實呈現手機原本的單欄版面
                     backgroundColor: '#ffffff',
                     useCORS: true
                 }).then(canvas => {
-                    // 截圖完成，復原手機原本的單欄排版
-                    if (colContainer) {
-                        colContainer.style.columnCount = '';
-                        colContainer.style.columnGap = '';
-                    }
                     targetElement.style.backgroundColor = originalBg;
-                    
                     callback(canvas);
                 });
             }, 400); 
@@ -982,5 +970,5 @@
             window.history.replaceState(null, '', window.location.pathname + '#' + encoded);
         }
     </script>
-</body> 
+</body>
 </html>
