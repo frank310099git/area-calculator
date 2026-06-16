@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         /* 隱藏原生數字輸入框的上下小箭頭 */
@@ -632,7 +631,7 @@
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 JPG
             </button>
-            <button onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
+            <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 PDF
             </button>
@@ -675,7 +674,13 @@
             loadStateFromURL();
             calculate();
 
-            // 處理自動跳轉後的自動匯出邏輯
+            // 若為手機裝置，自動隱藏 PDF 匯出按鈕
+            if (isMobileDevice) {
+                const pdfBtn = document.getElementById('btn-export-pdf');
+                if (pdfBtn) pdfBtn.style.display = 'none';
+            }
+
+            // 處理自動跳轉後的自動匯出邏輯 (僅保留 JPG 判斷)
             const urlParams = new URLSearchParams(window.location.search);
             const autoAction = urlParams.get('autoAction');
             
@@ -692,9 +697,7 @@
                     window.history.replaceState(null, '', cleanUrl);
 
                     // 延遲 800 毫秒確保字體與狀態完全載入後，自動執行匯出
-                    if (autoAction === 'pdf') {
-                        setTimeout(exportPDF, 800);
-                    } else if (autoAction === 'jpg') {
+                    if (autoAction === 'jpg') {
                         setTimeout(exportJPG, 800);
                     }
                 }
@@ -784,13 +787,13 @@
             }
         }
 
-        // ================= 核心截圖模組 (強制雙欄) =================
+        // ================= 核心截圖模組 =================
         function captureCanvas(callback) {
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
             const colContainer = targetElement.querySelector('.print-2-col');
             
-            // 關鍵：截圖瞬間，強制賦予雙欄屬性與白底，模擬列印狀態
+            // 截圖瞬間，強制賦予雙欄屬性與白底，模擬列印狀態
             if (colContainer) {
                 colContainer.style.columnCount = '2';
                 colContainer.style.columnGap = '6mm';
@@ -814,7 +817,7 @@
                     
                     callback(canvas);
                 });
-            }, 400); // 等待 DOM 渲染雙欄
+            }, 400); 
         }
 
         // ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
@@ -849,44 +852,17 @@
             link.click();
         }
 
-        // ================= 匯出 PDF 核心邏輯 (強制塞進單一頁面) =================
+        // ================= 匯出 PDF 核心邏輯 (僅限電腦版原生列印) =================
         function exportPDF() {
-            if (isInAppBrowser) { triggerRedirect('pdf'); return; }
-
-            if (!isMobileDevice) {
-                // 電腦版直接依賴最原生的列印
-                prepareForExport();
-                setTimeout(() => { window.print(); }, 400);
-            } else {
-                // 手機版：截圖後用 jsPDF 將長寬比例強制縮放進一張 A4
-                captureCanvas((canvas) => {
-                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4'); // 直式 A4
-
-                    const pageWidth = 210; // A4 寬度 210mm
-                    const pageHeight = 297; // A4 高度 297mm
-                    const margin = 8; // 邊界 8mm
-
-                    const maxImgWidth = pageWidth - margin * 2;
-                    const maxImgHeight = pageHeight - margin * 2;
-
-                    let imgWidth = maxImgWidth;
-                    let imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                    // 如果圖片高度超過一頁 A4，強制等比例縮小直到能塞進同一頁
-                    if (imgHeight > maxImgHeight) {
-                        imgHeight = maxImgHeight;
-                        imgWidth = (canvas.width * imgHeight) / canvas.height;
-                    }
-
-                    // 縮小後，計算左右置中
-                    const xOffset = margin + (maxImgWidth - imgWidth) / 2;
-
-                    pdf.addImage(imgData, 'JPEG', xOffset, margin, imgWidth, imgHeight);
-                    pdf.save('土地開發評估系統_' + new Date().getTime() + '.pdf');
-                });
+            // 防呆：如果手機端意外觸發，給予提示並中斷
+            if (isMobileDevice) { 
+                alert("手機端已停用 PDF 匯出功能，請使用 JPG 匯出或改用電腦版操作。");
+                return; 
             }
+
+            // 電腦版直接依賴最原生、畫質最佳的 window.print()
+            prepareForExport();
+            setTimeout(() => { window.print(); }, 400);
         }
 
         // ================= 試算邏輯 =================
