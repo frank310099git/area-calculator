@@ -31,14 +31,14 @@
         .unit-e { width: 46px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
         .val-text { font-family: monospace; font-weight: 700; color: #000000; font-size: 1rem; text-align: right; flex: 1; white-space: nowrap; }
         
-        /* ======= 表單輸入框防跑位強化設定 (修正字體偏下與加減號跑位) ======= */
+        /* ======= 表單輸入框防跑位強化設定 ======= */
         .plain-input { 
             width: 100%; max-width: 130px; text-align: right; 
             padding: 0 0.5rem;   
-            height: 38px;        /* 統一指定高度 */
-            line-height: 38px;   /* 讓行高等於高度，強制垂直置中 */
+            height: 38px;        
+            line-height: 38px;   
             border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; font-size: 0.875rem; 
-            -webkit-appearance: none; appearance: none; /* 徹底清除 iOS 預設樣式 */
+            -webkit-appearance: none; appearance: none; 
             box-sizing: border-box; 
             vertical-align: middle;
             margin: 0;
@@ -53,8 +53,8 @@
             border-top: 1px solid rgba(137, 128, 123, 0.5); border-bottom: 1px solid rgba(137, 128, 123, 0.5); border-left: none; border-right: none; 
             background-color: white; outline: none; font-family: monospace; font-size: 1rem; font-weight: 600; color: #000000; 
             padding: 0; margin: 0; 
-            height: 38px;         /* 明確指定高度 */
-            line-height: 38px;    /* 行高與高度完全一致，保證數字置中 */
+            height: 38px;         
+            line-height: 38px;    
             -webkit-appearance: none; appearance: none; border-radius: 0; box-sizing: border-box;
             vertical-align: middle;
         }
@@ -63,12 +63,20 @@
             font-size: 1.25rem; font-weight: 700; 
             display: flex; justify-content: center; align-items: center; 
             padding: 0; margin: 0; 
-            height: 38px;         /* 明確指定高度 */
-            line-height: 38px;    /* 取消原先的比例設定，直接強制等高對齊 */
+            height: 38px;         
+            line-height: 38px;    
             -webkit-appearance: none; appearance: none; box-sizing: border-box;
         }
         .input-group button:first-child { border-right: none; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
         .input-group button:last-child { border-left: none; border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
+
+        /* ======= 匯出圖片專用狀態 (瞬間隱藏 +- 按鈕並修補邊框) ======= */
+        body.is-exporting .input-group button { display: none !important; }
+        body.is-exporting .input-group input { 
+            border-left: 1px solid rgba(137, 128, 123, 0.5) !important; 
+            border-right: 1px solid rgba(137, 128, 123, 0.5) !important; 
+            border-radius: 0.25rem !important; 
+        }
 
         /* ======= PDF 雙欄列印最佳化 (電腦版原生列印使用) ======= */
         @media print {
@@ -822,6 +830,9 @@
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
             
+            // 加入匯出專用 class，隱藏按鈕並補回邊框
+            document.body.classList.add('is-exporting');
+
             const originalBg = targetElement.style.backgroundColor;
             targetElement.style.backgroundColor = 'white';
 
@@ -831,6 +842,8 @@
                     backgroundColor: '#ffffff',
                     useCORS: true
                 }).then(canvas => {
+                    // 結束後移除 class，恢復原狀
+                    document.body.classList.remove('is-exporting');
                     targetElement.style.backgroundColor = originalBg;
                     callback(canvas);
                 });
