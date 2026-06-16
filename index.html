@@ -101,12 +101,19 @@
             body { 
                 background-color: white !important; 
                 color: black !important; 
-                padding: 8mm !important; 
+                /* 縮小上下邊界至 2mm，左右維持 8mm */
+                padding: 2mm 8mm !important; 
                 box-sizing: border-box;
                 font-size: 10pt !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
             }
+            /* 消除主容器在列印時預設的上下內距 */
+            #capture-area {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            
             .print-hide { display: none !important; }
             .print-2-col { column-count: 2; column-gap: 6mm; }
             details { display: inline-block; width: 100%; margin-bottom: 4px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
