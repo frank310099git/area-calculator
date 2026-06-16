@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>台南市土地開發評估系統 V6.5 </title>
+    <title>台南市土地開發評估系統 V6.6 </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -137,7 +137,7 @@
         body.is-exporting .tab-content { display: block !important; opacity: 1 !important; }
         body.is-exporting #nav-bar, body.is-exporting #floating-profit-bar { display: none !important; }
 
-        /* ======= PDF 單頁列印極限壓縮 (橙色極簡風) ======= */
+        /* ======= PDF 單頁列印極限壓縮 (黑底白字重點) ======= */
         @media print {
             @page { size: A4 portrait; margin: 0; }
             
@@ -204,34 +204,34 @@
             .input-group { display: contents !important; }
             select.plain-input { background-image: none !important; padding-right: 0 !important; -webkit-appearance: none !important; appearance: none !important; }
 
-            /* ======= PDF 重點項目統一橙色系 ======= */
-            .print-highlight { background-color: #fff7ed !important; }
+            /* ======= PDF 重點項目統一黑底白字 ======= */
+            .print-highlight { background-color: #000000 !important; }
+            .print-highlight.ios-row { border-bottom: 1px solid #333 !important; }
             .print-highlight .ios-label, 
             .print-highlight .ios-label-sub, 
             .print-highlight .val-text, 
             .print-highlight .unit { 
-                color: #ea580c !important; 
+                color: #ffffff !important; 
                 font-weight: bold !important; 
             }
             
-            /* 毛利大方塊也套用橙色主題 */
+            /* 毛利大方塊也套用黑底白字 */
             .print-profit-box {
-                background-color: #fff7ed !important;
-                border: 2px solid #ea580c !important;
+                background-color: #000000 !important;
+                border: 2px solid #000000 !important;
                 border-radius: 6px !important;
                 margin-top: 8px !important;
                 padding: 8px !important;
                 display: block !important;
             }
-            .print-profit-box .text-[#8e8e93] { color: #ea580c !important; font-size: 10pt !important; margin-bottom: 2px !important; }
-            .print-profit-box .text-[#ffffff] { color: #ea580c !important; font-size: 24pt !important; font-weight: bold !important;}
+            .print-profit-box .text-[#8e8e93] { color: #cccccc !important; font-size: 10pt !important; margin-bottom: 2px !important; }
+            .print-profit-box .text-[#ffffff] { color: #ffffff !important; font-size: 24pt !important; font-weight: bold !important;}
             .print-profit-box .text-lg { font-size: 12pt !important; }
         }
     </style>
 </head>
 <body class="antialiased text-white selection:bg-[#0a84ff] selection:text-white">
 
-    <!-- ================= 頂部/底部導覽列 ================= -->
     <nav id="nav-bar" data-html2canvas-ignore="true" class="fixed bg-[#121212]/85 backdrop-blur-2xl flex justify-around items-center px-2 pb-safe z-50 print-hide">
         <button onclick="switchTab('tab-A', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#0a84ff] pt-2">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
@@ -257,7 +257,6 @@
 
     <div id="capture-area" class="max-w-2xl mx-auto p-4 md:p-6 relative">
         
-        <!-- 列印專屬/畫面共用標題 -->
         <div class="print-title-block mt-2 mb-6 pl-2 hidden md:block">
             <h1 class="text-3xl font-bold tracking-tight mb-1">台南市土地開發評估</h1>
             <h2 class="text-[#8e8e93] text-sm print-hide">適用電梯大樓專案</h2>
@@ -265,7 +264,6 @@
 
         <div class="print-2-col-wrapper">
 
-            <!-- ================= 基本資料 ================= -->
             <div id="tab-A" class="tab-content">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">基本資料</h2>
                 <div class="ios-card">
@@ -332,7 +330,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 重點高亮：允建容積 -->
                 <div class="ios-card bg-[#0a84ff]/10 print-highlight border border-[#0a84ff]/30">
                     <div class="ios-row border-none">
                         <div class="ios-label text-[#0a84ff] font-bold">允建容積</div>
@@ -344,7 +341,6 @@
                 </div>
             </div>
 
-            <!-- ================= 面積試算 ================= -->
             <div id="tab-B" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">面積試算</h2>
                 <div class="ios-card">
@@ -384,7 +380,6 @@
                             <div class="unit">戶</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：各戶平均售坪 -->
                     <div class="ios-row bg-[#ff9f0a]/10 print-highlight">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#ff9f0a] text-[#ff9f0a] font-bold">各戶平均售坪</div>
                         <div class="right-wrap">
@@ -475,7 +470,6 @@
                     </div>
                 </div>
 
-                <!-- 重點高亮：總樓地板面積合計 & 總樓地板面積+陽台 -->
                 <div class="ios-card bg-[#30d158]/10 border border-[#30d158]/30">
                     <div class="ios-row print-highlight">
                         <div class="ios-label text-[#30d158] font-bold">總樓地板面積合計</div>
@@ -494,7 +488,6 @@
                 </div>
             </div>
 
-            <!-- ================= 車位及公設 ================= -->
             <div id="tab-C" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">車位及公設</h2>
                 <div class="ios-card">
@@ -509,7 +502,6 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：車位數量預估 -->
                     <div class="ios-row bg-[#bf5af2]/10 print-highlight">
                         <div class="ios-label text-[#bf5af2] font-bold">車位數量預估</div>
                         <div class="right-wrap">
@@ -528,7 +520,6 @@
                             <div class="unit">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：公設比反推銷售面積 -->
                     <div class="ios-row bg-[#bf5af2]/10 print-highlight">
                         <div class="ios-label text-[#bf5af2] font-bold">公設比反推銷售面積</div>
                         <div class="right-wrap">
@@ -550,7 +541,6 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 公設總面積 一般化 -->
                     <div class="ios-row bg-[#2c2c2e]/30">
                         <div class="ios-label">公設總面積</div>
                         <div class="right-wrap">
@@ -568,7 +558,6 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：換算坪數 -->
                     <div class="ios-row bg-[#bf5af2]/10 print-highlight border-none">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#bf5af2] text-[#bf5af2] font-bold">換算坪數</div>
                         <div class="flex flex-col items-end">
@@ -582,7 +571,6 @@
                 </div>
             </div>
 
-            <!-- ================= 坪效分析 (整併為 Apple Teal) ================= -->
             <div id="tab-D" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">坪效分析</h2>
                 <div class="ios-card bg-[#32ade6]/10 border border-[#32ade6]/30">
@@ -624,7 +612,6 @@
                 </div>
             </div>
 
-            <!-- ================= 投報評估 ================= -->
             <div id="tab-E" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">投報評估</h2>
                 <div class="ios-card">
@@ -675,7 +662,6 @@
                             <div class="unit w-12">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：總成本 -->
                     <div class="ios-row bg-[#ff453a]/10 print-highlight">
                         <div class="ios-label text-[#ff453a] font-bold">總成本</div>
                         <div class="right-wrap">
@@ -729,7 +715,6 @@
                             <div class="unit w-12">萬元</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：總銷金額 -->
                     <div class="ios-row bg-[#0a84ff]/10 print-highlight border-none">
                         <div class="ios-label text-[#0a84ff] font-bold">總銷金額</div>
                         <div class="right-wrap">
@@ -739,7 +724,6 @@
                     </div>
                 </div>
                 
-                <!-- 大數字預估毛利區塊 -->
                 <div class="ios-card bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] border border-[#38383a] p-6 text-center print-profit-box">
                     <div class="text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
                     <div class="text-[#ffffff] text-4xl font-mono font-bold tracking-tight">
@@ -747,13 +731,7 @@
                         <span class="text-lg text-[#8e8e93] ml-1">萬元</span>
                     </div>
                 </div>
-            </div> <!-- End Tab E -->
-
-        </div> <!-- End print-2-col-wrapper -->
-    </div> <!-- End capture-area -->
-
-    <!-- ================= 懸浮數據卡 (Floating Profit Bar) ================= -->
-    <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
+            </div> </div> </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
         <div class="flex flex-col">
             <span class="text-xs text-[#8e8e93] font-medium tracking-wide">即時毛利</span>
             <div class="font-mono text-xl font-bold text-[#ffffff] flex items-baseline">
@@ -771,7 +749,6 @@
         </div>
     </div>
 
-    <!-- LINE App 阻擋下載提示視窗 -->
     <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm transition-opacity print-hide">
         <div class="bg-[#1c1c1e] rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100 border border-[#38383a]">
             <div class="w-16 h-16 bg-[#2c2c2e] text-white rounded-full flex items-center justify-center mx-auto mb-4">
