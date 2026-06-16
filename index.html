@@ -31,12 +31,42 @@
         .unit-e { width: 46px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
         .val-text { font-family: monospace; font-weight: 700; color: #000000; font-size: 1rem; text-align: right; flex: 1; white-space: nowrap; }
         
-        .plain-input { width: 100%; max-width: 130px; text-align: right; padding: 0.375rem; border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; font-size: 0.875rem; }
+        /* ======= 表單輸入框防跑位強化設定 (修正字體偏下與加減號跑位) ======= */
+        .plain-input { 
+            width: 100%; max-width: 130px; text-align: right; 
+            padding: 0 0.5rem;   
+            height: 38px;        /* 統一指定高度 */
+            line-height: 38px;   /* 讓行高等於高度，強制垂直置中 */
+            border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; font-size: 0.875rem; 
+            -webkit-appearance: none; appearance: none; /* 徹底清除 iOS 預設樣式 */
+            box-sizing: border-box; 
+            vertical-align: middle;
+            margin: 0;
+        }
+        .plain-input::placeholder { line-height: 38px; vertical-align: middle; }
+        
         .plain-input.num-font { font-family: monospace; font-size: 1rem; font-weight: 600; background-color: #f4f3ee; }
         
-        .input-group { display: flex; width: 100%; max-width: 130px; height: 38px; }
-        .input-group input { width: 100%; text-align: center; border-top: 1px solid rgba(137, 128, 123, 0.5); border-bottom: 1px solid rgba(137, 128, 123, 0.5); border-left: none; border-right: none; background-color: white; outline: none; font-family: monospace; font-size: 1rem; font-weight: 600; color: #000000; }
-        .input-group button { width: 2.75rem; background-color: #f4f3ee; border: 1px solid rgba(137, 128, 123, 0.5); color: #463f3a; font-size: 1.25rem; font-weight: 700; display: flex; justify-content: center; align-items: center; }
+        .input-group { display: flex; width: 100%; max-width: 130px; height: 38px; box-sizing: border-box; align-items: center; }
+        .input-group input { 
+            width: 100%; text-align: center; 
+            border-top: 1px solid rgba(137, 128, 123, 0.5); border-bottom: 1px solid rgba(137, 128, 123, 0.5); border-left: none; border-right: none; 
+            background-color: white; outline: none; font-family: monospace; font-size: 1rem; font-weight: 600; color: #000000; 
+            padding: 0; margin: 0; 
+            height: 38px;         /* 明確指定高度 */
+            line-height: 38px;    /* 行高與高度完全一致，保證數字置中 */
+            -webkit-appearance: none; appearance: none; border-radius: 0; box-sizing: border-box;
+            vertical-align: middle;
+        }
+        .input-group button { 
+            width: 2.75rem; background-color: #f4f3ee; border: 1px solid rgba(137, 128, 123, 0.5); color: #463f3a; 
+            font-size: 1.25rem; font-weight: 700; 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 0; margin: 0; 
+            height: 38px;         /* 明確指定高度 */
+            line-height: 38px;    /* 取消原先的比例設定，直接強制等高對齊 */
+            -webkit-appearance: none; appearance: none; box-sizing: border-box;
+        }
         .input-group button:first-child { border-right: none; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
         .input-group button:last-child { border-left: none; border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
 
@@ -798,7 +828,6 @@
             setTimeout(() => {
                 html2canvas(targetElement, {
                     scale: 2, 
-                    // 移除強制 windowWidth，讓它忠實呈現手機原本的單欄版面
                     backgroundColor: '#ffffff',
                     useCORS: true
                 }).then(canvas => {
