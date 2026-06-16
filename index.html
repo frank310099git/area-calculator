@@ -70,10 +70,10 @@
             display: flex; align-items: center; justify-content: flex-end;
         }
 
-        /* 輸入框與按鈕樣式 */
+        /* 輸入框與按鈕樣式 - 已修正文字置中與匯出防切線問題 */
         .plain-input { 
             width: 100%; max-width: 120px; text-align: right; 
-            padding: 6px 12px; height: 36px; line-height: normal;        
+            padding: 0 12px; height: 36px; line-height: 36px; 
             border-radius: 8px; font-size: 16px; -webkit-appearance: none; appearance: none; 
             background-color: #2c2c2e; color: #ffffff; border: none;
             box-sizing: border-box;
@@ -91,7 +91,7 @@
             width: 50px; text-align: center; background-color: transparent; border: none;
             font-family: -apple-system, monospace; font-size: 16px; font-weight: 600; color: #ffffff; 
             -webkit-appearance: none; appearance: none; box-sizing: border-box;
-            height: 32px; line-height: normal; padding: 4px 0; margin: 0;
+            height: 32px; line-height: 32px; padding: 0; margin: 0;
         }
         .input-group button { 
             width: 32px; height: 32px; background-color: #3a3a3c; border-radius: 6px; color: #ffffff; 
@@ -233,7 +233,6 @@
 </head>
 <body class="antialiased text-white selection:bg-[#0a84ff] selection:text-white">
 
-    <!-- ================= 頂部/底部導覽列 ================= -->
     <nav id="nav-bar" data-html2canvas-ignore="true" class="fixed bg-[#121212]/85 backdrop-blur-2xl flex justify-around items-center px-2 pb-safe z-50 print-hide">
         <button onclick="switchTab('tab-A', this)" class="tab-btn flex flex-col items-center w-[20%] text-[#0a84ff] pt-2">
             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
@@ -259,7 +258,6 @@
 
     <div id="capture-area" class="max-w-2xl mx-auto p-4 md:p-6 relative">
         
-        <!-- 列印專屬標題 -->
         <div class="print-title-block mt-2 mb-6 pl-2 hidden md:block">
             <h1 class="text-3xl font-bold tracking-tight mb-1">台南市土地開發評估</h1>
             <h2 class="text-[#8e8e93] text-sm print-hide">適用電梯大樓專案</h2>
@@ -267,7 +265,6 @@
 
         <div class="print-2-col-wrapper">
 
-            <!-- ================= 基本資料 ================= -->
             <div id="tab-A" class="tab-content">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">基本資料</h2>
                 <div class="ios-card">
@@ -334,7 +331,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 重點高亮：經典藍 -->
                 <div class="ios-card border border-[#0a84ff]/30">
                     <div class="ios-row border-none bg-[#0a84ff]/10 hl-blue">
                         <div class="ios-label text-[#0a84ff] font-bold">允建容積</div>
@@ -346,7 +342,6 @@
                 </div>
             </div>
 
-            <!-- ================= 面積試算 ================= -->
             <div id="tab-B" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">面積試算</h2>
                 <div class="ios-card">
@@ -386,7 +381,6 @@
                             <div class="unit">戶</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：經典藍 -->
                     <div class="ios-row bg-[#0a84ff]/10 hl-blue">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#0a84ff] text-[#0a84ff] font-bold">各戶平均售坪</div>
                         <div class="right-wrap">
@@ -477,7 +471,6 @@
                     </div>
                 </div>
 
-                <!-- 重點高亮：經典藍 -->
                 <div class="ios-card border border-[#0a84ff]/30">
                     <div class="ios-row bg-[#0a84ff]/10 hl-blue">
                         <div class="ios-label text-[#0a84ff] font-bold">總樓地板面積合計</div>
@@ -496,7 +489,6 @@
                 </div>
             </div>
 
-            <!-- ================= 車位及公設 ================= -->
             <div id="tab-C" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">車位及公設</h2>
                 <div class="ios-card">
@@ -511,7 +503,6 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：質感綠 -->
                     <div class="ios-row bg-[#30d158]/10 hl-green">
                         <div class="ios-label text-[#30d158] font-bold">車位數量預估</div>
                         <div class="right-wrap">
@@ -530,7 +521,6 @@
                             <div class="unit">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：質感綠 -->
                     <div class="ios-row bg-[#30d158]/10 hl-green">
                         <div class="ios-label text-[#30d158] font-bold">公設比反推銷售面積</div>
                         <div class="right-wrap">
@@ -569,7 +559,6 @@
                             <div class="unit">m²</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：質感綠 -->
                     <div class="ios-row bg-[#30d158]/10 hl-green border-none">
                         <div class="ios-label-sub pl-4 border-l-2 border-[#30d158] text-[#30d158] font-bold">換算坪數</div>
                         <div class="flex flex-col items-end">
@@ -583,11 +572,9 @@
                 </div>
             </div>
 
-            <!-- ================= 坪效分析 ================= -->
             <div id="tab-D" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">坪效分析</h2>
                 <div class="ios-card border border-[#ff9f0a]/30">
-                    <!-- 整區重點高亮：溫暖橘 -->
                     <div class="ios-row bg-[#ff9f0a]/10 hl-orange">
                         <div class="ios-label text-[#ff9f0a] font-bold">總樓地板面積(發包坪)</div>
                         <div class="right-wrap">
@@ -626,7 +613,6 @@
                 </div>
             </div>
 
-            <!-- ================= 投報評估 ================= -->
             <div id="tab-E" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-3 pl-2 tracking-wide tab-title">投報評估</h2>
                 <div class="ios-card">
@@ -677,7 +663,6 @@
                             <div class="unit w-12">%</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：典雅紫紅 -->
                     <div class="ios-row bg-[#ff453a]/10 hl-red">
                         <div class="ios-label text-[#ff453a] font-bold">總成本</div>
                         <div class="right-wrap">
@@ -731,7 +716,6 @@
                             <div class="unit w-12">萬元</div>
                         </div>
                     </div>
-                    <!-- 重點高亮：典雅紫紅 -->
                     <div class="ios-row bg-[#ff453a]/10 hl-red border-none">
                         <div class="ios-label text-[#ff453a] font-bold">總銷金額</div>
                         <div class="right-wrap">
@@ -741,7 +725,6 @@
                     </div>
                 </div>
                 
-                <!-- 大數字預估毛利區塊 -->
                 <div class="ios-card bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] border border-[#38383a] p-6 text-center print-profit-box">
                     <div class="profit-title text-[#8e8e93] text-sm font-bold mb-2">預估毛利分析</div>
                     <div class="flex justify-center items-baseline font-mono font-bold tracking-tight">
@@ -749,13 +732,7 @@
                         <span class="profit-unit text-lg text-[#8e8e93] ml-1">萬元</span>
                     </div>
                 </div>
-            </div> <!-- End Tab E -->
-
-        </div> <!-- End print-2-col-wrapper -->
-    </div> <!-- End capture-area -->
-
-    <!-- ================= 懸浮數據卡 (Floating Profit Bar) ================= -->
-    <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
+            </div> </div> </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
         <div class="flex flex-col">
             <span class="text-xs text-[#8e8e93] font-medium tracking-wide">即時毛利</span>
             <div class="font-mono text-xl font-bold text-[#ffffff] flex items-baseline">
@@ -773,7 +750,6 @@
         </div>
     </div>
 
-    <!-- LINE App 阻擋下載提示視窗 -->
     <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm transition-opacity print-hide">
         <div class="bg-[#1c1c1e] rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100 border border-[#38383a]">
             <div class="w-16 h-16 bg-[#2c2c2e] text-white rounded-full flex items-center justify-center mx-auto mb-4">
