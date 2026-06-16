@@ -27,10 +27,9 @@
             justify-content: flex-end;
             flex: 1; 
         }
-        /* 單位與數字字體全面放大 */
-        .unit-abcd { width: 32px; text-align: left; font-size: 16px; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
-        .unit-e { width: 50px; text-align: left; font-size: 16px; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
-        .val-text { font-family: monospace; font-weight: 700; color: #000000; font-size: 18px; text-align: right; flex: 1; white-space: nowrap; }
+        .unit-abcd { width: 28px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
+        .unit-e { width: 46px; text-align: left; font-size: 0.875rem; font-weight: 700; color: #463f3a; margin-left: 8px; flex-shrink: 0; }
+        .val-text { font-family: monospace; font-weight: 700; color: #000000; font-size: 1rem; text-align: right; flex: 1; white-space: nowrap; }
         
         /* ======= 表單輸入框防跑位強化設定 ======= */
         .plain-input { 
@@ -38,8 +37,7 @@
             padding: 0 0.5rem;   
             height: 38px;        
             line-height: 38px;   
-            border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; 
-            font-size: 16px; /* 放大輸入字體 */
+            border: 1px solid rgba(137, 128, 123, 0.4); border-radius: 0.25rem; font-size: 0.875rem; 
             -webkit-appearance: none; appearance: none; 
             box-sizing: border-box; 
             vertical-align: middle;
@@ -54,20 +52,18 @@
             background-repeat: no-repeat;
             background-position: right 0.25rem center;
             background-size: 1rem;
-            padding-right: 1.5rem; 
-            text-align-last: right; 
+            padding-right: 1.5rem; /* 預留箭頭空間 */
+            text-align-last: right; /* 確保選取的文字靠右 */
             cursor: pointer;
         }
         
-        .plain-input.num-font { font-family: monospace; font-size: 18px; font-weight: 600; background-color: #f4f3ee; }
+        .plain-input.num-font { font-family: monospace; font-size: 1rem; font-weight: 600; background-color: #f4f3ee; }
         
         .input-group { display: flex; width: 100%; max-width: 130px; height: 38px; box-sizing: border-box; align-items: center; }
         .input-group input { 
             width: 100%; text-align: center; 
             border-top: 1px solid rgba(137, 128, 123, 0.5); border-bottom: 1px solid rgba(137, 128, 123, 0.5); border-left: none; border-right: none; 
-            background-color: white; outline: none; font-family: monospace; 
-            font-size: 18px; /* 放大輸入框數字 */
-            font-weight: 600; color: #000000; 
+            background-color: white; outline: none; font-family: monospace; font-size: 1rem; font-weight: 600; color: #000000; 
             padding: 0; margin: 0; 
             height: 38px;         
             line-height: 38px;    
@@ -76,8 +72,7 @@
         }
         .input-group button { 
             width: 2.75rem; background-color: #f4f3ee; border: 1px solid rgba(137, 128, 123, 0.5); color: #463f3a; 
-            font-size: 24px; /* 放大加減號 */
-            font-weight: 700; 
+            font-size: 1.25rem; font-weight: 700; 
             display: flex; justify-content: center; align-items: center; 
             padding: 0; margin: 0; 
             height: 38px;         
@@ -87,19 +82,20 @@
         .input-group button:first-child { border-right: none; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
         .input-group button:last-child { border-left: none; border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
 
-        /* ======= 匯出圖片專用狀態 ======= */
+        /* ======= 匯出圖片專用狀態 (瞬間隱藏 +- 按鈕並修補邊框) ======= */
         body.is-exporting .input-group button { display: none !important; }
         body.is-exporting .input-group input { 
             border-left: 1px solid rgba(137, 128, 123, 0.5) !important; 
             border-right: 1px solid rgba(137, 128, 123, 0.5) !important; 
             border-radius: 0.25rem !important; 
         }
+        /* 匯出時隱藏下拉選單箭頭，看起來像純文字 */
         body.is-exporting select.plain-input {
             background-image: none !important;
             padding-right: 0.5rem !important;
         }
 
-        /* ======= PDF 雙欄列印最佳化 (嚴格鎖死排版大小) ======= */
+        /* ======= PDF 雙欄列印最佳化 (電腦版原生列印使用) ======= */
         @media print {
             @page { size: A4 portrait; margin: 0; }
             body { 
@@ -114,18 +110,8 @@
             .print-hide { display: none !important; }
             .print-2-col { column-count: 2; column-gap: 6mm; }
             details { display: inline-block; width: 100%; margin-bottom: 4px !important; border: 1px solid #ccc !important; box-shadow: none !important; break-inside: avoid; }
+            details > summary { background-color: #cdb3a8 !important; border-bottom: 1px solid #ccc !important; padding: 4px 8px !important; }
             
-            /* 強制將被放大的字體在 PDF 中全部縮回標準大小，保證不破版 */
-            .text-\[16px\] { font-size: 10pt !important; line-height: 1.2 !important; }
-            .text-\[14px\] { font-size: 8pt !important; }
-            .text-\[17px\] { font-size: 10.5pt !important; }
-            .text-\[20px\] { font-size: 11pt !important; }
-            .text-\[22px\] { font-size: 12pt !important; }
-            .text-\[26px\] { font-size: 14pt !important; margin-bottom: 2px !important; }
-            .text-\[32px\] { font-size: 14pt !important; }
-            .text-\[13px\] { font-size: 8pt !important; }
-            summary.text-\[17px\] { font-size: 10.5pt !important; padding: 4px 8px !important; background-color: #cdb3a8 !important; border-bottom: 1px solid #ccc !important; }
-
             .p-3\.5 { padding: 3px 6px !important; }
             .p-4 { padding: 4px 6px !important; }
             .mt-2 { margin-top: 2px !important; }
@@ -138,12 +124,15 @@
             .input-group button { display: none !important; }
             .input-group { display: contents !important; }
             
+            /* 加入 line-height 強制垂直對齊，解決文字偏下問題 */
             .input-group input, .plain-input.num-font { 
                 width: 45px !important; height: 16px !important; line-height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 2px !important; text-align: right !important; font-size: 10.5pt !important; border-radius: 0 !important; color: black !important;
             }
             .plain-input:not(.num-font) { 
                 width: 70px !important; height: 16px !important; line-height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 !important; text-align: right !important; font-size: 10pt !important; border-radius: 0 !important; color: black !important;
             }
+            
+            /* 針對 select 的徹底防跑位設定 */
             select.plain-input {
                 background-image: none !important;
                 padding: 0 !important;
@@ -158,40 +147,40 @@
 <body class="bg-[#f4f3ee] text-[#463f3a] font-sans pb-28 selection:bg-[#cdb3a8] selection:text-[#000000]">
 
     <div id="capture-area" class="max-w-2xl mx-auto p-3 md:p-6 relative">
-        <h1 class="text-[26px] font-bold text-center mb-1 text-[#463f3a] tracking-wider">土地開發評估系統</h1>
-        <h2 class="text-[17px] font-medium text-center mb-6 text-[#89807b] tracking-widest print-hide">（適用電梯大樓）</h2>
+        <h1 class="text-2xl font-bold text-center mb-1 text-[#463f3a] tracking-wider">土地開發評估系統</h1>
+        <h2 class="text-base font-medium text-center mb-6 text-[#89807b] tracking-widest print-hide">（適用電梯大樓）</h2>
 
         <div class="print-2-col">
             
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none text-[17px]">
+                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>A. 基本資料</span>
                     <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </summary>
                 <div class="divide-y divide-[#89807b]/20">
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">案件名稱</div>
+                        <div class="text-[#463f3a] font-medium text-sm">案件名稱</div>
                         <div class="right-wrap">
                             <input type="text" id="a1" placeholder="手動填入" class="plain-input focus-ring-custom">
                             <div class="unit-abcd"></div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">基地位置</div>
+                        <div class="text-[#463f3a] font-medium text-sm">基地位置</div>
                         <div class="right-wrap">
                             <input type="text" id="a2" placeholder="手動填入" class="plain-input focus-ring-custom">
                             <div class="unit-abcd"></div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">基地面積</div>
+                        <div class="text-[#463f3a] font-medium text-sm">基地面積</div>
                         <div class="right-wrap">
                             <input type="number" id="a3" inputmode="decimal" value="1000" min="1" class="plain-input num-font focus-ring-custom">
                             <div class="unit-abcd">m²</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">使用分區</div>
+                        <div class="text-[#463f3a] font-medium text-sm">使用分區</div>
                         <div class="right-wrap">
                             <select id="a4" class="plain-input focus-ring-custom">
                                 <option value="住宅區" selected>住宅區</option>
@@ -204,35 +193,35 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">建蔽率</div>
+                        <div class="text-[#463f3a] font-medium text-sm">建蔽率</div>
                         <div class="right-wrap">
                             <input type="number" id="a5" inputmode="decimal" value="50" min="1" max="100" class="plain-input num-font focus-ring-custom">
                             <div class="unit-abcd">%</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">容積率</div>
+                        <div class="text-[#463f3a] font-medium text-sm">容積率</div>
                         <div class="right-wrap">
                             <input type="number" id="a6" inputmode="decimal" value="200" min="1" max="1000" class="plain-input num-font focus-ring-custom">
                             <div class="unit-abcd">%</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">都更+容移</div>
+                        <div class="text-[#463f3a] font-medium text-sm">都更+容移</div>
                         <div class="right-wrap">
                             <input type="number" id="a7" inputmode="decimal" value="0" min="0" max="90" class="plain-input num-font focus-ring-custom">
                             <div class="unit-abcd">%</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">容積獎勵</div>
+                        <div class="text-[#463f3a] font-medium text-sm">容積獎勵</div>
                         <div class="right-wrap">
                             <input type="number" id="a8" inputmode="decimal" value="0" min="0" max="50" class="plain-input num-font focus-ring-custom">
                             <div class="unit-abcd">%</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-bold">允建容積</div>
+                        <div class="text-[#89807b] text-sm font-bold">允建容積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-a9">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -242,7 +231,7 @@
             </details>
 
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none text-[17px]">
+                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>B. 面積試算</span>
                     <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </summary>
@@ -250,7 +239,7 @@
                     
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-b border-transparent">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">地上樓層數</div>
+                            <div class="text-[#463f3a] font-medium text-sm">地上樓層數</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('b1', -1)">-</button>
@@ -262,7 +251,7 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">標準層設計建蔽率</div>
+                                <div class="text-[#463f3a] font-medium text-sm">標準層設計建蔽率</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-b1-prime">0</div>
                                     <div class="unit-abcd">%</div>
@@ -273,7 +262,7 @@
 
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">標準層戶數</div>
+                            <div class="text-[#463f3a] font-medium text-sm">標準層戶數</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('b2', -1)">-</button>
@@ -285,14 +274,14 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">總戶數</div>
+                                <div class="text-[#463f3a] font-medium text-sm">總戶數</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-b2-prime">0</div>
                                     <div class="unit-abcd">戶</div>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">各戶平均售坪</div>
+                                <div class="text-[#463f3a] font-medium text-sm">各戶平均售坪</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-b2-dprime">0.00</div>
                                     <div class="unit-abcd">坪</div>
@@ -302,7 +291,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-[16px]">地下樓層數</div>
+                        <div class="text-[#463f3a] font-medium text-sm">地下樓層數</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('b3', -1)">-</button>
@@ -314,7 +303,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-[16px]">梯廳比例</div>
+                        <div class="text-[#463f3a] font-medium text-sm">梯廳比例</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('b4', -1)">-</button>
@@ -327,7 +316,7 @@
 
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
                         <div class="flex items-center space-x-2">
-                            <div class="text-[#463f3a] font-medium text-[16px]">陽台比例</div>
+                            <div class="text-[#463f3a] font-medium text-sm">陽台比例</div>
                             <button type="button" id="btn-balcony" class="text-xl leading-none w-6 h-6 flex items-center justify-center font-bold text-[#463f3a] active:scale-90 transition-transform print-hide" onclick="toggleBalcony()">☐</button>
                         </div>
                         <div class="right-wrap">
@@ -337,18 +326,18 @@
                     </div>
 
                     <div class="flex items-start justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium mt-1">地上各層樓地板面積</div>
+                        <div class="text-[#89807b] text-sm font-medium mt-1">地上各層樓地板面積</div>
                         <div class="flex flex-col items-end">
                             <div class="right-wrap">
                                 <div class="val-text" id="out-b6">0.00</div>
                                 <div class="unit-abcd">m²</div>
                             </div>
-                            <div id="warn-b6" class="text-[13px] text-white bg-red-600 px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 超出建蔽率</div>
+                            <div id="warn-b6" class="text-[11px] text-white bg-red-600 px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 超出建蔽率</div>
                         </div>
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">地上層樓地板合計</div>
+                        <div class="text-[#89807b] text-sm font-medium">地上層樓地板合計</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-b7">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -356,7 +345,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">地上層+陽台合計</div>
+                        <div class="text-[#89807b] text-sm font-medium">地上層+陽台合計</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-b8">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -364,7 +353,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-[16px]">地下室開挖比例</div>
+                        <div class="text-[#463f3a] font-medium text-sm">地下室開挖比例</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('b9', -1)">-</button>
@@ -376,7 +365,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">地下室面積合計</div>
+                        <div class="text-[#89807b] text-sm font-medium">地下室面積合計</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-b10">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -384,7 +373,7 @@
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">總樓地板面積合計</div>
+                        <div class="text-[#463f3a] text-sm font-bold">總樓地板面積合計</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-b11">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -392,7 +381,7 @@
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">總樓地板面積+陽台</div>
+                        <div class="text-[#463f3a] text-sm font-bold">總樓地板面積+陽台</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-b12">0.00</div>
                             <div class="unit-abcd">m²</div>
@@ -402,13 +391,13 @@
             </details>
 
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none text-[17px]">
+                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>C. 車位及公設</span>
                     <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </summary>
                 <div class="divide-y divide-[#89807b]/20">
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
-                        <div class="text-[#463f3a] font-medium text-[16px]">車位坪效預估</div>
+                        <div class="text-[#463f3a] font-medium text-sm">車位坪效預估</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('c1', -1)">-</button>
@@ -419,14 +408,14 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">車位數量預估</div>
+                        <div class="text-[#89807b] text-sm font-medium">車位數量預估</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-c2">0</div>
                             <div class="unit-abcd">輛</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-[16px]">公設比設定</div>
+                        <div class="text-[#463f3a] font-medium text-sm">公設比設定</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('c3', -1)">-</button>
@@ -437,28 +426,28 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">公設比反推銷售面積</div>
+                        <div class="text-[#89807b] text-sm font-medium">公設比反推銷售面積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-c4">0</div>
                             <div class="unit-abcd">m²</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">地上層公設面積</div>
+                        <div class="text-[#89807b] text-sm font-medium">地上層公設面積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-c5">0</div>
                             <div class="unit-abcd">m²</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">地下層公設面積</div>
+                        <div class="text-[#89807b] text-sm font-medium">地下層公設面積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-c6">0</div>
                             <div class="unit-abcd">m²</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-3.5 bg-[#f4f3ee]/80">
-                        <div class="text-[#89807b] text-[16px] font-medium">公設總面積</div>
+                        <div class="text-[#89807b] text-sm font-medium">公設總面積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-c7">0</div>
                             <div class="unit-abcd">m²</div>
@@ -467,7 +456,7 @@
                     
                     <div class="p-3.5 bg-[#f4f3ee]/80 border-t border-[#89807b]/20">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#89807b] text-[16px] font-medium">每車位持分面積</div>
+                            <div class="text-[#89807b] text-sm font-medium">每車位持分面積</div>
                             <div class="right-wrap">
                                 <div class="val-text" id="out-c8">0</div>
                                 <div class="unit-abcd">m²</div>
@@ -475,13 +464,13 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-start justify-between">
-                                <div class="text-[#89807b] text-[16px] font-medium mt-1">每車位持分面積</div>
+                                <div class="text-[#89807b] text-sm font-medium mt-1">每車位持分面積</div>
                                 <div class="flex flex-col items-end">
                                     <div class="right-wrap">
                                         <div class="val-text" id="out-c8-prime">0</div>
                                         <div class="unit-abcd">坪</div>
                                     </div>
-                                    <div id="warn-c8" class="text-[13px] text-white bg-[#463f3a] px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 面積過小</div>
+                                    <div id="warn-c8" class="text-[11px] text-white bg-[#463f3a] px-1.5 py-0.5 rounded mt-1 hidden shadow-sm print-hide mr-9">⚠️ 面積過小</div>
                                 </div>
                             </div>
                         </div>
@@ -490,41 +479,41 @@
             </details>
 
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none text-[17px]">
+                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>D. 坪效分析</span>
                     <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </summary>
                 <div class="divide-y divide-[#89807b]/20">
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">總樓地板面積(發包坪)</div>
+                        <div class="text-[#463f3a] text-sm font-bold">總樓地板面積(發包坪)</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-d1">0.00</div>
                             <div class="unit-abcd">坪</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">陽台面積</div>
+                        <div class="text-[#463f3a] text-sm font-bold">陽台面積</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-d2">0.00</div>
                             <div class="unit-abcd">坪</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">停車位數量</div>
+                        <div class="text-[#463f3a] text-sm font-bold">停車位數量</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-d3">0</div>
                             <div class="unit-abcd">輛</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">銷售面積(不含車位)</div>
+                        <div class="text-[#463f3a] text-sm font-bold">銷售面積(不含車位)</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-d4">0.00</div>
                             <div class="unit-abcd">坪</div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">售坪比(不含車位)</div>
+                        <div class="text-[#463f3a] text-sm font-bold">售坪比(不含車位)</div>
                         <div class="right-wrap">
                             <div class="val-text" id="out-d5">0.00</div>
                             <div class="unit-abcd"></div>
@@ -534,14 +523,14 @@
             </details>
 
             <details class="bg-white shadow-sm border border-[#89807b]/40 rounded-xl overflow-hidden group mb-4 break-inside-avoid" open>
-                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none text-[17px]">
+                <summary class="bg-[#cdb3a8] text-[#463f3a] px-4 py-3 font-bold tracking-wide flex justify-between items-center cursor-pointer select-none list-none">
                     <span>E. 投報評估</span>
                     <svg class="w-5 h-5 text-[#463f3a] transition-transform duration-300 group-open:rotate-180 print-hide" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </summary>
                 <div class="divide-y divide-[#89807b]/20">
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">土地成本</div>
+                            <div class="text-[#463f3a] font-medium text-sm">土地成本</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('e1', -1)">-</button>
@@ -553,7 +542,7 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">總土地成本</div>
+                                <div class="text-[#463f3a] font-medium text-sm">總土地成本</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-e1-prime">0.00</div>
                                     <div class="unit-e">萬元</div>
@@ -564,7 +553,7 @@
                     
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">營建成本</div>
+                            <div class="text-[#463f3a] font-medium text-sm">營建成本</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('e2', -1)">-</button>
@@ -576,7 +565,7 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">總營建成本</div>
+                                <div class="text-[#463f3a] font-medium text-sm">總營建成本</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-e2-prime">0.00</div>
                                     <div class="unit-e">萬元</div>
@@ -586,7 +575,7 @@
                     </div>
 
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50 border-t border-[#89807b]/20">
-                        <div class="text-[#463f3a] font-medium text-[16px]">管銷成本</div>
+                        <div class="text-[#463f3a] font-medium text-sm">管銷成本</div>
                         <div class="right-wrap">
                             <div class="input-group">
                                 <button class="btn-tap" onclick="adj('e3', -1)">-</button>
@@ -598,16 +587,16 @@
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-y border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">總成本</div>
+                        <div class="text-[#463f3a] text-sm font-bold">總成本</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[20px]" id="out-e4">0.00</div>
+                            <div class="val-text text-lg" id="out-e4">0.00</div>
                             <div class="unit-e">萬元</div>
                         </div>
                     </div>
 
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">每坪售價</div>
+                            <div class="text-[#463f3a] font-medium text-sm">每坪售價</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('e5', -1)">-</button>
@@ -619,14 +608,14 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-2">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">每戶平均售價(不含車)</div>
+                                <div class="text-[#463f3a] font-medium text-sm">每戶平均售價(不含車)</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-e5-prime">0.00</div>
                                     <div class="unit-e">萬元</div>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">建物銷售總價</div>
+                                <div class="text-[#463f3a] font-medium text-sm">建物銷售總價</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-e5-dprime">0.00</div>
                                     <div class="unit-e">萬元</div>
@@ -637,7 +626,7 @@
 
                     <div class="hover:bg-[#f4f3ee]/30 p-3.5 border-t border-[#89807b]/20">
                         <div class="flex items-center justify-between">
-                            <div class="text-[#463f3a] font-medium text-[16px]">車位單價</div>
+                            <div class="text-[#463f3a] font-medium text-sm">車位單價</div>
                             <div class="right-wrap">
                                 <div class="input-group">
                                     <button class="btn-tap" onclick="adj('e6', -1)">-</button>
@@ -649,7 +638,7 @@
                         </div>
                         <div class="mt-2 pl-3 border-l-2 border-[#cdb3a8] space-y-1">
                             <div class="flex items-center justify-between">
-                                <div class="text-[#463f3a] font-medium text-[16px]">車位銷售總價</div>
+                                <div class="text-[#463f3a] font-medium text-sm">車位銷售總價</div>
                                 <div class="right-wrap">
                                     <div class="val-text" id="out-e6-prime">0.00</div>
                                     <div class="unit-e">萬元</div>
@@ -659,18 +648,18 @@
                     </div>
 
                     <div class="flex items-center justify-between p-4 bg-[#cdb3a8]/20 border-y border-[#89807b]/20">
-                        <div class="text-[#463f3a] text-[16px] font-bold">總銷金額</div>
+                        <div class="text-[#463f3a] text-sm font-bold">總銷金額</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[20px]" id="out-e7">0.00</div>
+                            <div class="val-text text-lg" id="out-e7">0.00</div>
                             <div class="unit-e">萬元</div>
                         </div>
                     </div>
 
                     <div class="flex items-center justify-between p-5 bg-[#463f3a] border-t-2 border-[#cdb3a8] rounded-b-xl">
-                        <div class="text-[#cdb3a8] text-[20px] font-bold">預估毛利</div>
+                        <div class="text-[#cdb3a8] text-lg font-bold">預估毛利</div>
                         <div class="right-wrap">
-                            <div class="val-text text-[#f4f3ee] text-[32px]" id="out-e8">0.00</div>
-                            <div class="unit-e text-[#cdb3a8] text-[17px]">萬元</div>
+                            <div class="val-text text-[#f4f3ee] text-3xl" id="out-e8">0.00</div>
+                            <div class="unit-e text-[#cdb3a8] text-base">萬元</div>
                         </div>
                     </div>
                 </div>
@@ -684,17 +673,17 @@
             <div class="w-16 h-16 bg-[#cdb3a8]/20 text-[#463f3a] rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-[22px] font-bold text-[#463f3a] mb-2">請使用外部瀏覽器匯出</h3>
-            <p class="text-[#89807b] text-[16px] mb-5 leading-relaxed">
+            <h3 class="text-xl font-bold text-[#463f3a] mb-2">請使用外部瀏覽器匯出</h3>
+            <p class="text-[#89807b] text-sm mb-5 leading-relaxed">
                 目前所在的內建瀏覽器阻擋了下載功能。<br>請點擊下方按鈕複製網址（會保留您的輸入資料），<br>再手動貼上至 <strong class="text-[#463f3a] border-b border-[#cdb3a8]">Safari</strong> 或 <strong class="text-[#463f3a] border-b border-[#cdb3a8]">Chrome</strong> 即可。
             </p>
             
             <div class="space-y-3">
-                <button onclick="copyToClipboard()" class="w-full bg-[#463f3a] text-white font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform shadow-sm flex justify-center items-center text-[16px]">
+                <button onclick="copyToClipboard()" class="w-full bg-[#463f3a] text-white font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform shadow-sm flex justify-center items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                     <span id="copy-text">複製專屬網址 (含資料)</span>
                 </button>
-                <button onclick="document.getElementById('line-warning').classList.add('hidden')" class="w-full bg-[#f4f3ee] text-[#463f3a] font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform border border-[#cdb3a8] text-[16px]">
+                <button onclick="document.getElementById('line-warning').classList.add('hidden')" class="w-full bg-[#f4f3ee] text-[#463f3a] font-bold tracking-widest py-3 rounded-xl active:scale-95 transition-transform border border-[#cdb3a8]">
                     返回修改
                 </button>
             </div>
@@ -703,18 +692,18 @@
 
     <div id="bottom-bar" data-html2canvas-ignore="true" class="fixed bottom-0 left-0 right-0 bg-[#463f3a] text-[#f4f3ee] p-3 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.1)] flex justify-between items-center z-50 border-t border-[#cdb3a8] print-hide">
         <div class="flex flex-col pl-1">
-            <span class="text-[14px] text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
-            <div class="font-mono text-[22px] font-bold text-white flex items-baseline">
+            <span class="text-xs text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
+            <div class="font-mono text-xl font-bold text-white flex items-baseline">
                 <span id="sticky-e8">0.00</span> 
-                <span class="text-[16px] ml-1 text-[#cdb3a8]">萬</span>
+                <span class="text-sm ml-1 text-[#cdb3a8]">萬</span>
             </div>
         </div>
         <div class="flex space-x-2">
-            <button onclick="exportJPG()" class="bg-[#f4f3ee] text-[#463f3a] px-3 py-2.5 rounded-lg text-[16px] font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
+            <button onclick="exportJPG()" class="bg-[#f4f3ee] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 JPG
             </button>
-            <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-[16px] font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
+            <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 PDF
             </button>
@@ -724,6 +713,7 @@
     <script>
         let useBalcony = true;
 
+        // 偵測裝置與瀏覽器環境
         const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const isInAppBrowser = /Line|MicroMessenger|FBAN|FBAV|Instagram/i.test(navigator.userAgent);
 
@@ -756,24 +746,29 @@
             loadStateFromURL();
             calculate();
 
+            // 若為手機裝置，自動隱藏 PDF 匯出按鈕
             if (isMobileDevice) {
                 const pdfBtn = document.getElementById('btn-export-pdf');
                 if (pdfBtn) pdfBtn.style.display = 'none';
             }
 
+            // 處理自動跳轉後的自動匯出邏輯 (僅保留 JPG 判斷)
             const urlParams = new URLSearchParams(window.location.search);
             const autoAction = urlParams.get('autoAction');
             
             if (autoAction) {
                 if (isInAppBrowser) {
+                    // 如果仍然在 LINE 等軟體內，代表自動跳轉失敗，顯示警告視窗
                     document.getElementById('line-warning').classList.remove('hidden');
                 } else {
+                    // 已經成功在 Safari/Chrome 開啟，清除網址上的參數保持乾淨
                     urlParams.delete('autoAction');
                     urlParams.delete('openExternalBrowser');
                     const qs = urlParams.toString() ? '?' + urlParams.toString() : '';
                     const cleanUrl = window.location.origin + window.location.pathname + qs + window.location.hash;
                     window.history.replaceState(null, '', cleanUrl);
 
+                    // 延遲 800 毫秒確保字體與狀態完全載入後，自動執行匯出
                     if (autoAction === 'jpg') {
                         setTimeout(exportJPG, 800);
                     }
@@ -781,6 +776,7 @@
             }
         });
 
+        // 加入 select 以支援選單事件
         document.querySelectorAll('input, select').forEach(input => {
             if(input.tagName.toLowerCase() === 'input') {
                 input.addEventListener('focus', function() { this.select(); });
@@ -843,6 +839,7 @@
             });
         }
 
+        // ================= 跳轉邏輯 =================
         function triggerRedirect(action) {
             const urlParams = new URLSearchParams(window.location.search);
             urlParams.set('openExternalBrowser', '1'); 
@@ -856,18 +853,24 @@
             }, 1500);
         }
 
+        // ================= 匯出前準備 =================
         function prepareForExport() {
+            // 展開所有區塊
             document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
+            // 移除焦點避免游標入鏡
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
             }
         }
 
+        // ================= 核心截圖模組 =================
         function captureCanvas(callback) {
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
             
+            // 加入匯出專用 class，隱藏按鈕並補回邊框
             document.body.classList.add('is-exporting');
+
             const originalBg = targetElement.style.backgroundColor;
             targetElement.style.backgroundColor = 'white';
 
@@ -877,6 +880,7 @@
                     backgroundColor: '#ffffff',
                     useCORS: true
                 }).then(canvas => {
+                    // 結束後移除 class，恢復原狀
                     document.body.classList.remove('is-exporting');
                     targetElement.style.backgroundColor = originalBg;
                     callback(canvas);
@@ -884,6 +888,7 @@
             }, 400); 
         }
 
+        // ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
         function exportJPG() {
             if (isInAppBrowser) { triggerRedirect('jpg'); return; }
 
@@ -891,6 +896,7 @@
                 const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
                 canvas.toBlob(function(blob) {
                     const file = new File([blob], fileName, { type: 'image/jpeg' });
+                    // 檢查裝置是否支援原生的 Web Share API
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         navigator.share({
                             files: [file],
@@ -914,15 +920,135 @@
             link.click();
         }
 
+        // ================= 匯出 PDF 核心邏輯 (僅限電腦版原生列印) =================
         function exportPDF() {
+            // 防呆：如果手機端意外觸發，給予提示並中斷
             if (isMobileDevice) { 
                 alert("手機端已停用 PDF 匯出功能，請使用 JPG 匯出或改用電腦版操作。");
                 return; 
             }
+
+            // 電腦版直接依賴最原生、畫質最佳的 window.print()
             prepareForExport();
             setTimeout(() => { window.print(); }, 400);
         }
 
+        // ================= 試算邏輯 =================
         function calculate() {
             const a3 = parseFloat(document.getElementById('a3').value) || 0;
             const a5 = parseFloat(document.getElementById('a5').value) || 0;
+            const a6 = parseFloat(document.getElementById('a6').value) || 0;
+            const a7 = parseFloat(document.getElementById('a7').value) || 0;
+            const a8 = parseFloat(document.getElementById('a8').value) || 0;
+            
+            const b1 = parseFloat(document.getElementById('b1').value) || 1;
+            const b2 = parseFloat(document.getElementById('b2').value) || 1;
+            const b3 = parseFloat(document.getElementById('b3').value) || 1;
+            const b4 = parseFloat(document.getElementById('b4').value) || 0;
+            const b9 = parseFloat(document.getElementById('b9').value) || 0;
+            
+            const c1 = parseFloat(document.getElementById('c1').value) || 1; 
+            const c3 = parseFloat(document.getElementById('c3').value) || 0;
+            
+            const e1 = parseFloat(document.getElementById('e1').value) || 0;
+            const e2 = parseFloat(document.getElementById('e2').value) || 0;
+            const e3 = parseFloat(document.getElementById('e3').value) || 0;
+            const e5 = parseFloat(document.getElementById('e5').value) || 0;
+            const e6 = parseFloat(document.getElementById('e6').value) || 0;
+
+            const pA5 = a5 / 100, pA6 = a6 / 100, pA7 = a7 / 100, pA8 = a8 / 100;
+            const pB4 = b4 / 100, pB9 = b9 / 100, pC3 = c3 / 100, pE3 = e3 / 100;
+            const pB5 = useBalcony ? (0.15 - pB4) : 0;
+
+            const valA9 = (1 + pA7 + pA8) * (a3 * pA6);
+            
+            const valB6 = (((1 + pA7) * 1.15 + pA8) * (a3 * pA6)) * (1 + pB4) / b1;
+            const valB1_prime = a3 > 0 ? (valB6 / a3) * 100 : 0;
+            const valB2_prime = Math.max(1, (b1 - 1) * b2); 
+            const valB7 = valB6 * b1 + valB6 * 0.125 * 3;
+            const valB8 = valB7 + (valB6 * pB5 * b1);
+            const valB10 = a3 * pB9 * b3; 
+            const valB11 = valB7 + valB10; 
+            const valB12 = valB10 + valB8; 
+
+            let valC2 = Math.round(valB10 / c1); 
+            if (valC2 === 0) valC2 = 1; 
+
+            const main_plus_balcony = valA9 + (valB6 * pB5 * b1);
+            let valC4 = 0;
+            if (pC3 < 1) valC4 = (main_plus_balcony * 0.99) / (1 - pC3); 
+            
+            const valC5 = valB7 - valA9 + (main_plus_balcony * 0.01);
+            const valC7 = valC4 - (main_plus_balcony * 0.99);
+            const valC6 = valC7 - valC5;
+            const valC8 = (valB10 - valC6) / valC2; 
+            const valC8_prime = valC8 * 0.3025;     
+
+            const valD1 = valB11 * 0.3025; 
+            const valD2 = (valB6 * pB5 * b1) * 0.3025; 
+            const valD3 = valC2;
+            const valD4 = valC4 * 0.3025; 
+            const valD5 = a3 > 0 ? (valC4 / a3) : 0; 
+
+            const valB2_dprime = valB2_prime > 0 ? (valD4 / valB2_prime) : 0; 
+
+            const valE1_prime = a3 * 0.3025 * e1;
+            const valE2_prime = valD1 * e2;
+            const valE4 = (valE1_prime + valE2_prime) * (1 + pE3);
+            const valE5_prime = valB2_dprime * e5; 
+            const valE5_dprime = e5 * valD4;       
+            const valE6_prime = e6 * valD3;        
+            const valE7 = valE5_dprime + valE6_prime; 
+            const valE8 = valE7 - valE4;            
+
+            setOut('out-a9', valA9, 2);
+            setOut('out-b1-prime', valB1_prime, 0);
+            setOut('out-b2-prime', valB2_prime, 0);
+            setOut('out-b2-dprime', valB2_dprime, 2);
+            setOut('out-b5', pB5 * 100, 2);
+            setOut('out-b6', valB6, 2);
+            setOut('out-b7', valB7, 2);
+            setOut('out-b8', valB8, 2);
+            setOut('out-b10', valB10, 2);
+            setOut('out-b11', valB11, 2);
+            setOut('out-b12', valB12, 2);
+            setOut('out-c2', valC2, 0);
+            setOut('out-c4', valC4, 0);
+            setOut('out-c5', valC5, 0);
+            setOut('out-c6', valC6, 0);
+            setOut('out-c7', valC7, 0);
+            setOut('out-c8', valC8, 0);
+            setOut('out-c8-prime', valC8_prime, 0);
+            setOut('out-d1', valD1, 2);
+            setOut('out-d2', valD2, 2);
+            setOut('out-d3', valD3, 0);
+            setOut('out-d4', valD4, 2);
+            setOut('out-d5', valD5, 2);
+            setOut('out-e1-prime', valE1_prime, 2);
+            setOut('out-e2-prime', valE2_prime, 2);
+            setOut('out-e4', valE4, 2);
+            setOut('out-e5-prime', valE5_prime, 2);
+            setOut('out-e5-dprime', valE5_dprime, 2);
+            setOut('out-e6-prime', valE6_prime, 2);
+            setOut('out-e7', valE7, 2);
+            setOut('out-e8', valE8, 2);
+
+            const warnB6 = document.getElementById('warn-b6');
+            if (valB6 > (a3 * pA5)) warnB6.classList.remove('hidden');
+            else warnB6.classList.add('hidden');
+
+            const warnC8 = document.getElementById('warn-c8');
+            if (valC8_prime < 4.16) warnC8.classList.remove('hidden');
+            else warnC8.classList.add('hidden');
+
+            const state = { uB: useBalcony };
+            document.querySelectorAll('input, select').forEach(i => {
+                if (i.id) state[i.id] = i.value;
+            });
+            const str = JSON.stringify(state);
+            const encoded = btoa(encodeURIComponent(str));
+            window.history.replaceState(null, '', window.location.pathname + '#' + encoded);
+        }
+    </script>
+</body>
+</html>
