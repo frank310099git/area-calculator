@@ -6,6 +6,7 @@
     <title>台南市土地開發評估系統（適用電梯大樓）V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- 只需要保留截圖套件 (html2canvas) 即可，已移除 jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -14,10 +15,10 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         /* 美化手機點擊與鎖定縮放 */
-        button, input { touch-action: manipulation; }
+        button, input, select { touch-action: manipulation; }
         .btn-tap:active { background-color: #cdb3a8; color: #f4f3ee; transform: scale(0.95); }
         .focus-ring-custom:focus { outline: none; box-shadow: 0 0 0 2px #cdb3a8; border-color: #89807b; }
-        input, button, svg { transition: all 0.2s ease-in-out; }
+        input, button, select, svg { transition: all 0.2s ease-in-out; }
         summary::-webkit-details-marker { display: none; }
         
         /* ======= 通用對齊排版系統 ======= */
@@ -42,8 +43,20 @@
             box-sizing: border-box; 
             vertical-align: middle;
             margin: 0;
+            background-color: transparent;
         }
         .plain-input::placeholder { line-height: 38px; vertical-align: middle; }
+        
+        /* 新增：下拉選單專屬箭頭與對齊設定 */
+        select.plain-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2389807b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.25rem center;
+            background-size: 1rem;
+            padding-right: 1.5rem; /* 預留箭頭空間 */
+            text-align-last: right; /* 確保選取的文字靠右 */
+            cursor: pointer;
+        }
         
         .plain-input.num-font { font-family: monospace; font-size: 1rem; font-weight: 600; background-color: #f4f3ee; }
         
@@ -76,6 +89,11 @@
             border-left: 1px solid rgba(137, 128, 123, 0.5) !important; 
             border-right: 1px solid rgba(137, 128, 123, 0.5) !important; 
             border-radius: 0.25rem !important; 
+        }
+        /* 匯出時隱藏下拉選單箭頭，看起來像純文字 */
+        body.is-exporting select.plain-input {
+            background-image: none !important;
+            padding-right: 0.5rem !important;
         }
 
         /* ======= PDF 雙欄列印最佳化 (電腦版原生列印使用) ======= */
@@ -112,6 +130,10 @@
             }
             .plain-input:not(.num-font) { 
                 width: 70px !important; height: 16px !important; border: none !important; border-bottom: 1px solid #999 !important; background: transparent !important; padding: 0 !important; text-align: right !important; font-size: 10pt !important; border-radius: 0 !important; color: black !important;
+            }
+            select.plain-input {
+                background-image: none !important;
+                padding-right: 0 !important;
             }
         }
     </style>
@@ -154,7 +176,14 @@
                     <div class="flex items-center justify-between p-3.5 hover:bg-[#f4f3ee]/50">
                         <div class="text-[#463f3a] font-medium text-sm">使用分區</div>
                         <div class="right-wrap">
-                            <input type="text" id="a4" placeholder="手動填入" class="plain-input focus-ring-custom">
+                            <!-- 這裡改成下拉選單 -->
+                            <select id="a4" class="plain-input focus-ring-custom">
+                                <option value="住宅區" selected>住宅區</option>
+                                <option value="商業區">商業區</option>
+                                <option value="工業區">工業區</option>
+                                <option value="都外建築用地">都外建築用地</option>
+                                <option value="其他">其他</option>
+                            </select>
                             <div class="unit-abcd"></div>
                         </div>
                     </div>
@@ -634,6 +663,7 @@
         </div>
     </div>
 
+    <!-- 加入 data-html2canvas-ignore="true" 避免這塊在轉換時被截圖進去 -->
     <div id="line-warning" data-html2canvas-ignore="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/60 p-4 transition-opacity print-hide">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-100">
             <div class="w-16 h-16 bg-[#cdb3a8]/20 text-[#463f3a] rounded-full flex items-center justify-center mx-auto mb-4">
@@ -656,6 +686,7 @@
         </div>
     </div>
 
+    <!-- 加入 data-html2canvas-ignore="true" 避免底部選單被截圖 -->
     <div id="bottom-bar" data-html2canvas-ignore="true" class="fixed bottom-0 left-0 right-0 bg-[#463f3a] text-[#f4f3ee] p-3 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.1)] flex justify-between items-center z-50 border-t border-[#cdb3a8] print-hide">
         <div class="flex flex-col pl-1">
             <span class="text-xs text-[#cdb3a8] font-bold tracking-wider">即時毛利</span>
@@ -665,10 +696,12 @@
             </div>
         </div>
         <div class="flex space-x-2">
+            <!-- 匯出圖片按鈕 -->
             <button onclick="exportJPG()" class="bg-[#f4f3ee] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 JPG
             </button>
+            <!-- 匯出PDF按鈕 (手機端會透過JS自動隱藏) -->
             <button id="btn-export-pdf" onclick="exportPDF()" class="bg-[#cdb3a8] text-[#463f3a] px-3 py-2.5 rounded-lg text-sm font-bold tracking-widest shadow active:scale-95 transition-transform flex items-center">
                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 PDF
@@ -742,9 +775,13 @@
             }
         });
 
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('focus', function() { this.select(); });
+        // 修改：加入 select 以支援選單事件
+        document.querySelectorAll('input, select').forEach(input => {
+            if(input.tagName.toLowerCase() === 'input') {
+                input.addEventListener('focus', function() { this.select(); });
+            }
             input.addEventListener('input', calculate);
+            input.addEventListener('change', calculate);
         });
 
         function setOut(id, val, decimals) {
@@ -1003,8 +1040,9 @@
             if (valC8_prime < 4.16) warnC8.classList.remove('hidden');
             else warnC8.classList.add('hidden');
 
+            // 修改：存檔時也支援 select 標籤
             const state = { uB: useBalcony };
-            document.querySelectorAll('input').forEach(i => {
+            document.querySelectorAll('input, select').forEach(i => {
                 if (i.id) state[i.id] = i.value;
             });
             const str = JSON.stringify(state);
