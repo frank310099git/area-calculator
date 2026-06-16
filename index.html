@@ -786,7 +786,7 @@
             }, 1500);
         }
 
-        // ================= 匯出 JPG 核心邏輯 =================
+// ================= 匯出 JPG 核心邏輯 (支援存入相簿) =================
         function exportJPG() {
             if (isInAppBrowser) {
                 triggerRedirect('jpg');
@@ -796,19 +796,42 @@
             prepareForExport();
             const targetElement = document.getElementById('capture-area');
             
+            // 檔名設定
+            const fileName = '土地開發評估系統_' + new Date().getTime() + '.jpg';
+            
             setTimeout(() => {
                 html2canvas(targetElement, {
                     scale: 2, 
-                    // 手機版維持 800px 確保雙欄，電腦版維持原始視窗寬度避免破版
                     windowWidth: isMobileDevice ? 800 : window.innerWidth,
                     backgroundColor: '#f4f3ee', 
                     useCORS: true
                 }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                    const link = document.createElement('a');
-                    link.download = '開發評估系統_' + new Date().getTime() + '.jpg';
-                    link.href = imgData;
-                    link.click();
+                    // 將 Canvas 轉換為 Blob 物件 (這才是分享 API 看得懂的格式)
+                    canvas.toBlob(function(blob) {
+                        const file = new File([blob], fileName, { type: 'image/jpeg' });
+
+                        // 檢查裝置是否支援原生的 Web Share API 並且允許分享檔案
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            // 呼叫手機原生的分享/儲存面板
+                            navigator.share({
+                                files: [file],
+                                title: '土地開發評估系統',
+                                text: '這是我產出的土地開發評估試算表，請參考。'
+                            }).then(() => {
+                                console.log('分享/儲存成功');
+                            }).catch((error) => {
+                                // 如果使用者手動關閉面板，會觸發 AbortError，這是正常的
+                                if (error.name !== 'AbortError') {
+                                    console.error('分享失敗:', error);
+                                    fallbackDownload(canvas, fileName);
+                                }
+                            });
+                        } else {
+                            // 如果是電腦版瀏覽器，或是較舊不支援的手機，退回傳統的下載方式
+                            fallbackDownload(canvas, fileName);
+                        }
+                    }, 'image/jpeg', 0.9);
+
                 }).catch(err => {
                     console.error("匯出圖片失敗：", err);
                     alert("匯出圖片時發生錯誤，請稍後再試。");
@@ -816,6 +839,14 @@
             }, 300); 
         }
 
+        // 傳統的強制下載機制 (備用方案)
+        function fallbackDownload(canvas, fileName) {
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = imgData;
+            link.click();
+        }
         // ================= 匯出 PDF 核心邏輯 =================
         function exportPDF() {
             if (isInAppBrowser) {
