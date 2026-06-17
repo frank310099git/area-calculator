@@ -1136,5 +1136,26 @@
             window.history.replaceState(null, '', window.location.pathname + '#' + encoded);
         }
     </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+      
+      // 攔截邏輯
+      window.va('beforeSend', function (event) {
+        if (typeof window !== 'undefined') {
+          // 1. 如果網址後面帶有 ?me=1，就標記這台瀏覽器
+          if (window.location.search.includes('me=1')) {
+            localStorage.setItem('block-my-analytics', 'true');
+          }
+          
+          // 2. 如果有標記，就回傳 null，阻止數據傳回 Vercel
+          if (localStorage.getItem('block-my-analytics') === 'true') {
+            console.log('Vercel Analytics: 已成功阻斷本人流量');
+            return null;
+          }
+        }
+        return event;
+      });
+    </script>
 </body>
 </html>
