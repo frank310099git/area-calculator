@@ -1045,7 +1045,7 @@
             
             const valB6 = (((1 + pA7) * 1.15 + pA8) * (a3 * pA6)) * (1 + pB4) / b1;
             const valB1_prime = a3 > 0 ? (valB6 / a3) * 100 : 0;
-            const valB2_prime = Math.max(1, Math.round(b2 * (b1 - 0.75)));
+            const valB2_prime = Math.max(1, Math.floor(b2 * (b1 - 0.75)));
             const valB7 = valB6 * b1 + valB6 * 0.125 * 3;
             const valB8 = valB7 + (valB6 * pB5 * b1);
             const valB10 = a3 * pB9 * b3; 
