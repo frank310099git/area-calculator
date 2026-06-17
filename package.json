@@ -1,0 +1,24 @@
+{
+  "name": "area-calculator",
+  "version": "1.0.0",
+  "description": "Taiwan Tainan City Land Development Evaluation System",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frank310099git/area-calculator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frank310099git/area-calculator/issues"
+  },
+  "homepage": "https://github.com/frank310099git/area-calculator#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
