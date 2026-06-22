@@ -137,12 +137,13 @@
 
         /* ======= PDF 單頁列印極限壓縮 (4種經典配色) ======= */
         @media print {
-            @page { size: A4 portrait; margin: 0; }
+            /* 設定 PDF 列印的上下邊界為 10mm */
+            @page { size: A4 portrait; margin: 10mm 0; }
             
             body { 
                 background-color: #FFFFFF !important; 
                 color: #1D1D1F !important; 
-                padding: 2mm 6mm !important; 
+                padding: 0 6mm !important; 
                 font-size: 10pt !important; 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
@@ -196,27 +197,23 @@
             select.plain-input { background-image: none !important; padding-right: 0 !important; -webkit-appearance: none !important; appearance: none !important; }
 
             /* ======= PDF 4種經典順眼配色 (莫蘭迪色系) ======= */
-            /* 1. 經典藍 (基本資料/面積試算) */
             .hl-blue { background-color: #F0F6FF !important; }
             .hl-blue.ios-row { border-bottom: 1px solid #D6E4FF !important; }
             .hl-blue *, .hl-blue .ios-label, .hl-blue .val-text, .hl-blue .unit { color: #0047AB !important; font-weight: bold !important; border-color: #0047AB !important; }
 
-            /* 2. 質感綠 (車位及公設) */
             .hl-green { background-color: #F2FBF5 !important; }
             .hl-green.ios-row { border-bottom: 1px solid #D3EFE0 !important; }
             .hl-green *, .hl-green .ios-label, .hl-green .val-text, .hl-green .unit { color: #145A32 !important; font-weight: bold !important; border-color: #145A32 !important; }
 
-            /* 3. 溫暖橘 (坪效分析) */
             .hl-orange { background-color: #FFF8F0 !important; }
             .hl-orange.ios-row { border-bottom: 1px solid #FFE4C8 !important; }
             .hl-orange *, .hl-orange .ios-label, .hl-orange .val-text, .hl-orange .unit { color: #D35400 !important; font-weight: bold !important; border-color: #D35400 !important; }
 
-            /* 4. 典雅紫紅 (投報評估) */
             .hl-red { background-color: #FFF2F5 !important; }
             .hl-red.ios-row { border-bottom: 1px solid #FFD6E0 !important; }
             .hl-red *, .hl-red .ios-label, .hl-red .val-text, .hl-red .unit { color: #880E4F !important; font-weight: bold !important; border-color: #880E4F !important; }
 
-            /* 預估毛利大方塊 (深灰藍底 + 純白字，確保文字不被吃掉) */
+            /* 預估毛利大方塊 */
             .print-profit-box {
                 background-color: #1C2833 !important;
                 border: none !important; 
@@ -229,9 +226,23 @@
             .print-profit-box .profit-val { color: #FFFFFF !important; font-size: 24pt !important; font-weight: bold !important; }
             .print-profit-box .profit-unit { color: #FFFFFF !important; font-size: 12pt !important; margin-left: 4px !important; }
         }
+
+        /* ======= PDF 公式明細列印專用樣式 ======= */
+        @media print {
+            #print-formulas {
+                display: block !important;
+                page-break-before: always;
+                padding: 0 5mm !important;
+            }
+            .f-group { margin-bottom: 6mm; break-inside: avoid; }
+            .f-title { font-size: 13pt; font-weight: bold; color: #1D1D1F; border-bottom: 2px solid #E5E5EA; margin-bottom: 3mm; padding-bottom: 1.5mm; }
+            .f-item { margin-bottom: 3.5mm; font-size: 10.5pt; font-family: monospace; line-height: 1.5; }
+            .f-name { font-weight: bold; color: #1D1D1F; font-size: 11pt; margin-bottom: 1mm; }
+            .f-eq { color: #555; }
+            .f-res { font-weight: bold; color: #0047AB; }
+        }
     </style>
     
-    <!-- Vercel Web Analytics -->
     <script>
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
@@ -738,7 +749,11 @@
                         <span class="profit-unit text-lg text-[#8e8e93] ml-1">萬元</span>
                     </div>
                 </div>
-            </div> </div> </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
+            </div> 
+            
+        </div> <div id="print-formulas" class="hidden"></div>
+
+    </div> <div id="floating-profit-bar" data-html2canvas-ignore="true" class="fixed left-4 right-4 bg-[#1c1c1e]/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-[#38383a] flex justify-between items-center z-40 print-hide transition-all">
         <div class="flex flex-col">
             <span class="text-xs text-[#8e8e93] font-medium tracking-wide">即時毛利</span>
             <div class="font-mono text-xl font-bold text-[#ffffff] flex items-baseline">
@@ -984,19 +999,27 @@
             });
         }
 
-        function fallbackDownload(canvas, fileName) {
-            const imgData = canvas.toDataURL('image/jpeg', 0.9);
-            const link = document.createElement('a');
-            link.download = fileName;
-            link.href = imgData;
-            link.click();
-        }
-
         function exportPDF() {
             if (isMobileDevice) { 
                 alert("手機端已停用 PDF 匯出功能，請使用 JPG 匯出或改用電腦版操作。");
                 return; 
             }
+
+            // ======= 新增密碼驗證 =======
+            const pwd = prompt("請輸入匯出 PDF 的密碼：");
+            
+            // 如果使用者點擊「取消」或直接關閉視窗，就中斷執行
+            if (pwd === null) {
+                return; 
+            }
+            
+            // 驗證密碼是否正確
+            if (pwd !== "8888") {
+                alert("❌ 密碼錯誤，無法匯出！");
+                return;
+            }
+            // ==========================
+
             prepareForExport();
             setTimeout(() => { 
                 window.print(); 
@@ -1126,6 +1149,207 @@
             const warnC8 = document.getElementById('warn-c8');
             if (valC8_prime < 4.16) warnC8.classList.remove('hidden');
             else warnC8.classList.add('hidden');
+
+            // ======= 動態生成 PDF 專用公式明細 =======
+            const fmt = (n) => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const fmt0 = (n) => Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+            const tBalcony = valB6 * pB5 * b1; // 總陽台面積
+            
+            document.getElementById('print-formulas').innerHTML = `
+                <div class="f-group">
+                    <div class="f-title">一、基本資料</div>
+                    <div class="f-item">
+                        <div class="f-name">允建容積</div>
+                        <div class="f-eq">= (1 + 都更及容移比例 + 容積獎勵比例) × (基地面積 × 容積率)</div>
+                        <div class="f-eq">= (1 + ${a7}% + ${a8}%) × (${a3} × ${a6}%)</div>
+                        <div class="f-res">= ${fmt(valA9)} m²</div>
+                    </div>
+                </div>
+
+                <div class="f-group">
+                    <div class="f-title">二、面積試算</div>
+                    <div class="f-item">
+                        <div class="f-name">地上各層樓地板面積</div>
+                        <div class="f-eq">= [((1 + 都更及容移比例) × 1.15 + 容積獎勵比例) × (基地面積 × 容積率)]<br>× (1 + 梯廳比例) ÷ 地上樓層數</div>
+                        <div class="f-eq">= [((1 + ${a7}%) × 1.15 + ${a8}%) × (${a3} × ${a6}%)]<br>× (1 + ${b4}%) ÷ ${b1}</div>
+                        <div class="f-res">= ${fmt(valB6)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">標準層設計建蔽率</div>
+                        <div class="f-eq">= (地上各層樓地板面積 ÷ 基地面積) × 100%</div>
+                        <div class="f-eq">= (${fmt(valB6)} ÷ ${a3}) × 100%</div>
+                        <div class="f-res">= ${fmt0(valB1_prime)} %</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總戶數</div>
+                        <div class="f-eq">= 標準層戶數 × (地上樓層數 - 0.75)</div>
+                        <div class="f-eq">= ${b2} × (${b1} - 0.75)</div>
+                        <div class="f-res">= ${fmt0(valB2_prime)} 戶</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">地上層樓地板合計</div>
+                        <div class="f-eq">= (地上各層樓地板面積 × 地上樓層數) + (地上各層樓地板面積 × 0.375)</div>
+                        <div class="f-eq">= (${fmt(valB6)} × ${b1}) + (${fmt(valB6)} × 0.375)</div>
+                        <div class="f-res">= ${fmt(valB7)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">地上層 + 陽台合計</div>
+                        <div class="f-eq">= 地上層樓地板合計 + (地上各層樓地板面積 × 陽台比例 × 地上樓層數)</div>
+                        <div class="f-eq">= ${fmt(valB7)} + (${fmt(valB6)} × ${b5}% × ${b1})</div>
+                        <div class="f-res">= ${fmt(valB8)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">地下室面積合計</div>
+                        <div class="f-eq">= 基地面積 × 地下室開挖比例 × 地下樓層數</div>
+                        <div class="f-eq">= ${a3} × ${b9}% × ${b3}</div>
+                        <div class="f-res">= ${fmt(valB10)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總樓地板面積合計</div>
+                        <div class="f-eq">= 地上層樓地板合計 + 地下室面積合計</div>
+                        <div class="f-eq">= ${fmt(valB7)} + ${fmt(valB10)}</div>
+                        <div class="f-res">= ${fmt(valB11)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總樓地板面積 + 陽台</div>
+                        <div class="f-eq">= 地下室面積合計 + 地上層+陽台合計</div>
+                        <div class="f-eq">= ${fmt(valB10)} + ${fmt(valB8)}</div>
+                        <div class="f-res">= ${fmt(valB12)} m²</div>
+                    </div>
+                </div>
+
+                <div class="f-group">
+                    <div class="f-title">三、車位及公設</div>
+                    <div class="f-item">
+                        <div class="f-name">車位數量預估</div>
+                        <div class="f-eq">= 地下室面積合計 ÷ 車位坪效預估</div>
+                        <div class="f-eq">= ${fmt(valB10)} ÷ ${c1}</div>
+                        <div class="f-res">= ${fmt0(valC2)} 輛</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">公設比反推銷售面積</div>
+                        <div class="f-eq">= [ (允建容積 + 總陽台面積) × 0.99 ] ÷ (1 - 公設比)</div>
+                        <div class="f-eq">= [ (${fmt(valA9)} + ${fmt(tBalcony)}) × 0.99 ] ÷ (1 - ${c3}%)</div>
+                        <div class="f-res">= ${fmt0(valC4)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">地上層公設面積</div>
+                        <div class="f-eq">= 地上層樓地板合計 - 允建容積 + [ (允建容積 + 總陽台面積) × 0.01 ]</div>
+                        <div class="f-eq">= ${fmt(valB7)} - ${fmt(valA9)} + [ (${fmt(valA9)} + ${fmt(tBalcony)}) × 0.01 ]</div>
+                        <div class="f-res">= ${fmt0(valC5)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">公設總面積</div>
+                        <div class="f-eq">= 公設比反推銷售面積 - [ (允建容積 + 總陽台面積) × 0.99 ]</div>
+                        <div class="f-eq">= ${fmt0(valC4)} - [ (${fmt(valA9)} + ${fmt(tBalcony)}) × 0.99 ]</div>
+                        <div class="f-res">= ${fmt0(valC7)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">地下層公設面積</div>
+                        <div class="f-eq">= 公設總面積 - 地上層公設面積</div>
+                        <div class="f-eq">= ${fmt0(valC7)} - ${fmt0(valC5)}</div>
+                        <div class="f-res">= ${fmt0(valC6)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">每車位持分面積</div>
+                        <div class="f-eq">= (地下室面積合計 - 地下層公設面積) ÷ 車位數量預估</div>
+                        <div class="f-eq">= (${fmt(valB10)} - ${fmt0(valC6)}) ÷ ${fmt0(valC2)}</div>
+                        <div class="f-res">= ${fmt0(valC8)} m²</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">換算坪數</div>
+                        <div class="f-eq">= 每車位持分面積 × 0.3025</div>
+                        <div class="f-eq">= ${fmt0(valC8)} × 0.3025</div>
+                        <div class="f-res">= ${fmt0(valC8_prime)} 坪</div>
+                    </div>
+                </div>
+
+                <div class="f-group">
+                    <div class="f-title">四、坪效分析</div>
+                    <div class="f-item">
+                        <div class="f-name">總樓地板面積(發包坪)</div>
+                        <div class="f-eq">= 總樓地板面積合計(m²) × 0.3025</div>
+                        <div class="f-eq">= ${fmt(valB11)} × 0.3025</div>
+                        <div class="f-res">= ${fmt(valD1)} 坪</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">陽台面積</div>
+                        <div class="f-eq">= (地上各層樓地板面積 × 陽台比例 × 地上樓層數) × 0.3025</div>
+                        <div class="f-eq">= (${fmt(valB6)} × ${b5}% × ${b1}) × 0.3025</div>
+                        <div class="f-res">= ${fmt(valD2)} 坪</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">銷售面積(不含車位)</div>
+                        <div class="f-eq">= 公設比反推銷售面積(m²) × 0.3025</div>
+                        <div class="f-eq">= ${fmt0(valC4)} × 0.3025</div>
+                        <div class="f-res">= ${fmt(valD4)} 坪</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">各戶平均售坪</div>
+                        <div class="f-eq">= 銷售面積(坪) ÷ 總戶數</div>
+                        <div class="f-eq">= ${fmt(valD4)} ÷ ${fmt0(valB2_prime)}</div>
+                        <div class="f-res">= ${fmt(valB2_dprime)} 坪</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">售坪比(不含車位)</div>
+                        <div class="f-eq">= 公設比反推銷售面積(m²) ÷ 基地面積</div>
+                        <div class="f-eq">= ${fmt0(valC4)} ÷ ${a3}</div>
+                        <div class="f-res">= ${fmt(valD5)} 倍</div>
+                    </div>
+                </div>
+
+                <div class="f-group">
+                    <div class="f-title">五、投報評估</div>
+                    <div class="f-item">
+                        <div class="f-name">總土地成本</div>
+                        <div class="f-eq">= 基地面積 × 0.3025 × 土地成本(萬/坪)</div>
+                        <div class="f-eq">= ${a3} × 0.3025 × ${e1}</div>
+                        <div class="f-res">= ${fmt(valE1_prime)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總營建成本</div>
+                        <div class="f-eq">= 總樓地板面積(發包坪) × 營建成本(萬/坪)</div>
+                        <div class="f-eq">= ${fmt(valD1)} × ${e2}</div>
+                        <div class="f-res">= ${fmt(valE2_prime)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總成本</div>
+                        <div class="f-eq">= (總土地成本 + 總營建成本) × (1 + 管銷成本比例)</div>
+                        <div class="f-eq">= (${fmt(valE1_prime)} + ${fmt(valE2_prime)}) × (1 + ${e3}%)</div>
+                        <div class="f-res">= ${fmt(valE4)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">每戶平均售價(不含車)</div>
+                        <div class="f-eq">= 各戶平均售坪 × 每坪售價(萬/坪)</div>
+                        <div class="f-eq">= ${fmt(valB2_dprime)} × ${e5}</div>
+                        <div class="f-res">= ${fmt(valE5_prime)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">建物銷售總價</div>
+                        <div class="f-eq">= 銷售面積(坪) × 每坪售價(萬/坪)</div>
+                        <div class="f-eq">= ${fmt(valD4)} × ${e5}</div>
+                        <div class="f-res">= ${fmt(valE5_dprime)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">車位銷售總價</div>
+                        <div class="f-eq">= 停車位數量 × 車位單價(萬/輛)</div>
+                        <div class="f-eq">= ${fmt0(valC2)} × ${e6}</div>
+                        <div class="f-res">= ${fmt(valE6_prime)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">總銷金額</div>
+                        <div class="f-eq">= 建物銷售總價 + 車位銷售總價</div>
+                        <div class="f-eq">= ${fmt(valE5_dprime)} + ${fmt(valE6_prime)}</div>
+                        <div class="f-res">= ${fmt(valE7)} 萬元</div>
+                    </div>
+                    <div class="f-item">
+                        <div class="f-name">預估毛利分析</div>
+                        <div class="f-eq">= 總銷金額 - 總成本</div>
+                        <div class="f-eq">= ${fmt(valE7)} - ${fmt(valE4)}</div>
+                        <div class="f-res">= ${fmt(valE8)} 萬元</div>
+                    </div>
+                </div>
+            `;
 
             const state = {};
             document.querySelectorAll('input, select').forEach(i => {
