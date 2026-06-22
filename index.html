@@ -1004,22 +1004,6 @@
                 alert("手機端已停用 PDF 匯出功能，請使用 JPG 匯出或改用電腦版操作。");
                 return; 
             }
-
-            // ======= 新增密碼驗證 =======
-            const pwd = prompt("請輸入匯出 PDF 的密碼：");
-            
-            // 如果使用者點擊「取消」或直接關閉視窗，就中斷執行
-            if (pwd === null) {
-                return; 
-            }
-            
-            // 驗證密碼是否正確
-            if (pwd !== "8888") {
-                alert("❌ 密碼錯誤，無法匯出！");
-                return;
-            }
-            // ==========================
-
             prepareForExport();
             setTimeout(() => { 
                 window.print(); 
